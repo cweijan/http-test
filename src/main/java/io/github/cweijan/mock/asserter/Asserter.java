@@ -1,6 +1,6 @@
-package github.cweijan.mock.asserter;
+package io.github.cweijan.mock.asserter;
 
-import github.cweijan.mock.util.JSON;
+import io.github.cweijan.mock.util.JSON;
 import org.json.JSONException;
 import org.junit.jupiter.api.Assertions;
 import org.skyscreamer.jsonassert.JSONAssert;

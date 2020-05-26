@@ -1,7 +1,7 @@
-package github.cweijan.mock.jupiter;
+package io.github.cweijan.mock.jupiter;
 
-import github.cweijan.mock.Mocker;
-import github.cweijan.mock.context.HttpMockContext;
+import io.github.cweijan.mock.Mocker;
+import io.github.cweijan.mock.context.HttpMockContext;
 
 import java.util.HashMap;
 import java.util.Map;

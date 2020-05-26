@@ -1,4 +1,4 @@
-package github.cweijan.mock.request.string;
+package io.github.cweijan.mock.request.string;
 
 import java.util.Random;
 

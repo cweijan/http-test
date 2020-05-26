@@ -1,6 +1,6 @@
-package github.cweijan.mock.jupiter;
+package io.github.cweijan.mock.jupiter;
 
-import github.cweijan.mock.util.ReflectUtils;
+import io.github.cweijan.mock.util.ReflectUtils;
 import org.junit.jupiter.api.extension.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

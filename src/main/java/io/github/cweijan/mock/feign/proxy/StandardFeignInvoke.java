@@ -1,7 +1,7 @@
-package github.cweijan.mock.feign.proxy;
+package io.github.cweijan.mock.feign.proxy;
 
 
-import github.cweijan.mock.util.JSON;
+import io.github.cweijan.mock.util.JSON;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

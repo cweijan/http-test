@@ -1,4 +1,4 @@
-package github.cweijan.mock.util;
+package io.github.cweijan.mock.util;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonParser.Feature;

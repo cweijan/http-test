@@ -1,4 +1,4 @@
-package github.cweijan.mock.feign.proxy;
+package io.github.cweijan.mock.feign.proxy;
 
 import org.springframework.cglib.proxy.Callback;
 import org.springframework.cglib.proxy.Enhancer;

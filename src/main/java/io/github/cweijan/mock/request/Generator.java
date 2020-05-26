@@ -1,9 +1,9 @@
-package github.cweijan.mock.request;
+package io.github.cweijan.mock.request;
 
-import github.cweijan.mock.feign.FeignBuilder;
-import github.cweijan.mock.request.string.ChineseStringGenerator;
-import github.cweijan.mock.request.string.StringGenerator;
-import github.cweijan.mock.util.ReflectUtils;
+import io.github.cweijan.mock.feign.FeignBuilder;
+import io.github.cweijan.mock.request.string.ChineseStringGenerator;
+import io.github.cweijan.mock.request.string.StringGenerator;
+import io.github.cweijan.mock.util.ReflectUtils;
 import org.springframework.beans.BeanInstantiationException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.lang.Nullable;

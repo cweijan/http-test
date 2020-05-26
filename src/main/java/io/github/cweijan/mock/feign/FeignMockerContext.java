@@ -1,7 +1,7 @@
-package github.cweijan.mock.feign;
+package io.github.cweijan.mock.feign;
 
 import feign.RequestInterceptor;
-import github.cweijan.mock.context.HttpMockContext;
+import io.github.cweijan.mock.context.HttpMockContext;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.stereotype.Controller;

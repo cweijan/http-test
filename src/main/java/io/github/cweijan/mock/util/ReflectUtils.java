@@ -1,4 +1,4 @@
-package github.cweijan.mock.util;
+package io.github.cweijan.mock.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

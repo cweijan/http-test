@@ -1,8 +1,8 @@
-package github.cweijan.mock;
+package io.github.cweijan.mock;
 
 import feign.RequestInterceptor;
-import github.cweijan.mock.context.HttpMockContext;
-import github.cweijan.mock.feign.FeignMockerContext;
+import io.github.cweijan.mock.context.HttpMockContext;
+import io.github.cweijan.mock.feign.FeignMockerContext;
 
 /**
  * @author cweijan

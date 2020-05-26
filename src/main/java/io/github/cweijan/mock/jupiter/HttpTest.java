@@ -1,4 +1,4 @@
-package github.cweijan.mock.jupiter;
+package io.github.cweijan.mock.jupiter;
 
 import org.junit.jupiter.api.extension.ExtendWith;
 

@@ -1,12 +1,12 @@
-package github.cweijan.mock.feign;
+package io.github.cweijan.mock.feign;
 
 import feign.Feign;
 import feign.RequestInterceptor;
 import feign.optionals.OptionalDecoder;
-import github.cweijan.mock.context.HttpMockContext;
-import github.cweijan.mock.feign.proxy.CglibClient;
-import github.cweijan.mock.feign.proxy.FeignClientWrapper;
-import github.cweijan.mock.feign.proxy.StandardFeignInvoke;
+import io.github.cweijan.mock.context.HttpMockContext;
+import io.github.cweijan.mock.feign.proxy.CglibClient;
+import io.github.cweijan.mock.feign.proxy.FeignClientWrapper;
+import io.github.cweijan.mock.feign.proxy.StandardFeignInvoke;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.description.annotation.AnnotationDescription;
 import net.bytebuddy.description.modifier.Visibility;

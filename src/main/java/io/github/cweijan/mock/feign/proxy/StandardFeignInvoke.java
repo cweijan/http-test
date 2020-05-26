@@ -12,7 +12,7 @@ import java.lang.reflect.Method;
  */
 public class StandardFeignInvoke implements FeignInvoke {
 
-    private Object feignClient;
+    private final Object feignClient;
 
     public StandardFeignInvoke(Object feignClient) {
         this.feignClient = feignClient;

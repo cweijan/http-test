@@ -119,17 +119,17 @@ public class FeignBuilder {
     /**
      * 创建一个代理类并加入上下文map
      *
-     * @param originType     原始类型
-     * @param feignInterface feign接口类
+     * @param controllerClass     原始类型
      * @param mockContext    spring应用web上下文信息
      * @return
      */
-    static Object createFeignClient(Class<?> originType, Class<?> feignInterface, HttpMockContext mockContext) {
+    static Object createFeignClient(Class<?> controllerClass, HttpMockContext mockContext) {
+        Class<?> feignInterface = generateFeignInterface(controllerClass);
         String scheme = mockContext.getScheme();
         String host = mockContext.getHost();
         Integer port = mockContext.getPort();
 
-        RequestMapping requestMapping = originType.getAnnotation(RequestMapping.class);
+        RequestMapping requestMapping = controllerClass.getAnnotation(RequestMapping.class);
         String path;
         if (requestMapping != null) {
             String[] value = requestMapping.value();

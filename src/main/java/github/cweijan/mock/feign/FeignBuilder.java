@@ -3,7 +3,6 @@ package github.cweijan.mock.feign;
 import feign.Feign;
 import feign.RequestInterceptor;
 import feign.optionals.OptionalDecoder;
-import feign.slf4j.Slf4jLogger;
 import github.cweijan.mock.context.HttpMockContext;
 import github.cweijan.mock.feign.proxy.CglibClient;
 import github.cweijan.mock.feign.proxy.FeignClientWrapper;
@@ -144,7 +143,6 @@ public class FeignBuilder {
                 .encoder(new PageableSpringEncoder(new SpringEncoder(httpMessageConvertersObjectFactory)))
                 .decoder(new OptionalDecoder(new ResponseEntityDecoder(new SpringDecoder(httpMessageConvertersObjectFactory))))
                 .contract(new SpringMvcContract(Collections.emptyList(), new DefaultFormattingConversionService()))
-                .logger(new Slf4jLogger(originType))
                 .target(feignInterface, scheme + "://" + host + ":" + port + path);
     }
 

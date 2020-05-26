@@ -22,6 +22,11 @@ dependencies {
     compile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.5.2'
     compile group: 'org.skyscreamer', name: 'jsonassert', version: '1.5.0'
     compile group: 'net.bytebuddy', name: 'byte-buddy', version: '1.10.8'
-    compile group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '2.2.2.RELEASE'
+
+//    compile group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '2.2.2.RELEASE'
+
+    compile group: 'io.github.openfeign', name: 'feign-core', version: '10.7.4'
+    compile group: 'org.springframework.cloud', name: 'spring-cloud-openfeign-core', version: '2.2.2.RELEASE'
+
 
 }

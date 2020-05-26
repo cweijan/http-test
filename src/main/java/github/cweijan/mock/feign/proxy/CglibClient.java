@@ -18,7 +18,6 @@ public class CglibClient implements FeignClientWrapper {
         e.setCallbackType(MethodInterceptor.class);
         Class<?> dynamicClass = e.createClass();
         Enhancer.registerCallbacks(dynamicClass, new Callback[]{(MethodInterceptor) (o1, method, args, methodProxy) -> feignInvoke.invoke(method, args)});
-        System.out.println(dynamicClass.getName());
         return (T) ObjenesisHelper.newInstance(dynamicClass);
     }
 }

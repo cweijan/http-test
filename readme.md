@@ -63,6 +63,7 @@
     @HttpTest(host = "localhost",port = 8080)
     public class UserControllerTest {
     
+        //仅支持注入controller和feignClient
         @Resource
         private UserController userController;
     

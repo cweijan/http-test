@@ -26,7 +26,7 @@ public class StandardFeignInvoke implements FeignInvoke {
             Method feignMethod = feignClient.getClass().getMethod(method.getName(), method.getParameterTypes());
             invoke = feignMethod.invoke(feignClient, args);
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
         System.out.println("Response Body: " + JSON.toJSON(invoke));
         System.out.println("-----------------------------------------------------------------------------------------------------------------------");

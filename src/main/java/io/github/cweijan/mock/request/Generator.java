@@ -88,6 +88,14 @@ public class Generator {
         return objStream.collect(Collectors.toList());
     }
 
+    public static Object peak(Object... values) {
+        int length = values.length;
+        if (length == 0) return null;
+
+        int range = range(0, length-1);
+        return values[range];
+    }
+
     /**
      * 根据类型自动创建一个随机值
      *

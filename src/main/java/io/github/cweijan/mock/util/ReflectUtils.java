@@ -94,10 +94,10 @@ public abstract class ReflectUtils {
     }
 
     /**
-     * 将源对象的转换为新的对象<br/>
+     * 将源对象的转换为新的对象
      * 与BeanUtils.copyProperties的不同点
-     * <li>copyProperties是复制属性,需要手动创建对象, 该方法为直接对象转换,且支持转Map为Object</li>
-     * <li>copyProperties方法的两个参数容易造成混淆, 该方法参数简单明了</li>
+     * copyProperties是复制属性,需要手动创建对象, 该方法为直接对象转换,且支持转Map为Object
+     * copyProperties方法的两个参数容易造成混淆, 该方法参数简单明了
      *
      * @param source      源对象
      * @param targetClass 目标class
@@ -107,10 +107,10 @@ public abstract class ReflectUtils {
     }
 
     /**
-     * 将源对象的转换为新的对象<br/>
+     * 将源对象的转换为新的对象
      * 与BeanUtils.copyProperties的不同点
-     * <li>copyProperties是复制属性,需要手动创建对象, 该方法为直接对象转换,且支持转Map为Object</li>
-     * <li>copyProperties方法的两个参数容易造成混淆, 该方法参数简单明了</li>
+     * copyProperties是复制属性,需要手动创建对象, 该方法为直接对象转换,且支持转Map为Object
+     * copyProperties方法的两个参数容易造成混淆, 该方法参数简单明了
      *
      * @param source      源对象
      * @param targetClass 目标class
@@ -285,7 +285,7 @@ public abstract class ReflectUtils {
     }
 
     /**
-     * 获取class对象的泛型, example class: extends Base<String>
+     * 获取class对象的泛型, 需要父类有泛型声明
      */
     public static Class<?> getGenericType(Class<?> clazz) {
         List<Class<?>> genericTypeList = getGenericTypeArray(clazz);
@@ -293,7 +293,7 @@ public abstract class ReflectUtils {
     }
 
     /**
-     * 获取Field的泛型列表, example field: List<String> nameList
+     * 获取Field的泛型列表
      */
     public static List<Class<?>> getGenericTypeArray(Field field) {
         if (field == null) return null;

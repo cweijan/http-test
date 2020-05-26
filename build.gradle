@@ -1,6 +1,8 @@
 plugins {
     id 'java'
     id 'maven'
+    id 'maven-publish'
+    id 'signing'
 }
 
 compileJava.options.encoding = 'UTF-8'
@@ -28,5 +30,81 @@ dependencies {
     compile group: 'io.github.openfeign', name: 'feign-core', version: '10.7.4'
     compile group: 'org.springframework.cloud', name: 'spring-cloud-openfeign-core', version: '2.2.2.RELEASE'
 
+}
 
+task sourcesJar(type: Jar) {
+    classifier "sources"
+    from sourceSets.main.allJava
+}
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier "javadoc"
+    from javadoc.destinationDir
+}
+javadoc {
+    options {
+        encoding "UTF-8"
+        charSet 'UTF-8'
+    }
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
+
+publishing {
+    publications {
+
+        mavenJava(MavenPublication) {
+            groupId 'io.github.cweijan'
+            artifactId 'http-test'
+            version '0.0.1'
+            from components.java
+            artifact sourcesJar
+            artifact javadocJar
+            pom {
+                name = 'http-test'
+                description = 'test springmvc controller by api'
+                url = 'https://github.com/cweijan/http-test'
+                organization {
+                    name = 'io.github.cweijan'
+                    url = 'https://github.com/cweijan'
+                }
+                issueManagement {
+                    system = 'GitHub'
+                    url = 'https://github.com/cweijan/http-test/issues'
+                }
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'https://github.com/cweijan/http-test/blob/master/LICENSE'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'cweijan'
+                        name = 'cweijan'
+                        email = 'cweijan@163.com'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:git://github.com/cweijan/http-test.git'
+                    developerConnection = 'scm:git:ssh://git@github.com:cweijan/http-test.git'
+                    url = 'https://github.com/cweijan/http-test.git'
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            url "https://oss.sonatype.org/service/local/staging/deploy/maven2"
+            credentials {
+                username findProperty("sonatype.username")
+                password findProperty("sonatype.password")
+            }
+        }
+    }
+}
+
+signing {
+    sign publishing.publications.mavenJava
 }

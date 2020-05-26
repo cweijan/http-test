@@ -66,6 +66,14 @@
         @Resource
         private UserController userController;
     
+        @Test
+        void testAddToken(){
+           //该拦截器对所有请求都生效
+           Mocker.apiInterceptor((RequestTemplate requestTemplate) -> {
+               requestTemplate.header("token","testToken");
+           });
+        }
+   
         // 注意, 必须使用junit5: org.junit.jupiter.api.Test
         @Test
         void saveUser() {
@@ -81,7 +89,7 @@
     
             userController.deleteByUserId(userVo.getId());
             
-        }
+        }       
     
     }
     ```

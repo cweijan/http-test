@@ -79,20 +79,40 @@ public class Generator {
         return objStream.collect(Collectors.toSet());
     }
 
+    /**
+     * 根据类型随机生成list
+     *
+     * @param targetType 目标类型
+     * @param <T>
+     * @return
+     */
     public static <T> List<T> list(Class<T> targetType) {
         return list(targetType, Generator.range(1, 5));
     }
 
+    /**
+     * 根据类型随机生成list
+     *
+     * @param targetType 目标类型
+     * @param length     list最大长度
+     * @param <T>
+     * @return
+     */
     public static <T> List<T> list(Class<T> targetType, int length) {
         Stream<T> objStream = IntStream.range(0, length).mapToObj(operand -> request(targetType));
         return objStream.collect(Collectors.toList());
     }
 
+    /**
+     * 随机返回参数列表内的任意一个参数
+     * @param values 参数列表
+     * @return
+     */
     public static Object peak(Object... values) {
         int length = values.length;
         if (length == 0) return null;
 
-        int range = range(0, length-1);
+        int range = range(0, length - 1);
         return values[range];
     }
 
@@ -125,7 +145,7 @@ public class Generator {
             return range(0, 1024);
         }
         if (targetType == Long.class || targetType == long.class) {
-            return random.nextLong() * 1024;
+            return Math.abs(random.nextLong());
         }
         if (targetType == Byte.class || targetType == byte.class) {
             return new Integer(random.nextInt(256)).byteValue();

@@ -51,7 +51,7 @@
     
     }
     ```
-3. 创建测试用例, 开始测试
+3. 创建Junit5测试用例(IDEA可通过generate菜单快速生成), 开始测试
     ```java
     import io.github.cweijan.mock.asserter.Asserter;
     import io.github.cweijan.mock.jupiter.HttpTest;
@@ -94,7 +94,11 @@
     
     }
     ```
-   
+# 常用API
+- Generator: 用于生成mock数据
+- Asserter: 用于对数据进行断言验证
+- Mocker: 用于创建controller代理以及设置拦截器
+
 # 实现原理
 1. 扫描controller并使用ByteBuddy动态创建feign接口
 2. 根据接口创建feign

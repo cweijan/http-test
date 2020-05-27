@@ -7,3 +7,7 @@ build/
 gradlew
 gradlew.bat
 gradle/
+bin/
+.settings
+.project
+.classpath

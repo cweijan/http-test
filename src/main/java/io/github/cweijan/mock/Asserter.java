@@ -1,4 +1,4 @@
-package io.github.cweijan.mock.asserter;
+package io.github.cweijan.mock;
 
 import io.github.cweijan.mock.util.JSON;
 import org.json.JSONException;

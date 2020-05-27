@@ -53,7 +53,7 @@
     ```
 3. 创建Junit5测试用例(IDEA可通过generate菜单快速生成), 开始测试
     ```java
-    import io.github.cweijan.mock.asserter.Asserter;
+    import io.github.cweijan.mock.Asserter;
     import io.github.cweijan.mock.jupiter.HttpTest;
     import io.github.cweijan.mock.request.Generator;
     import org.junit.jupiter.api.Test;

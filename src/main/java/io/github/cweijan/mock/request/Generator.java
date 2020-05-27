@@ -185,7 +185,7 @@ public class Generator {
         }
 
         if (targetType == LocalDate.class) {
-            return LocalDate.ofEpochDay(randomTimeStamp(4, 3));
+            return LocalDateTime.ofInstant(Instant.ofEpochMilli(randomTimeStamp(4, 3)), ZoneId.systemDefault()).toLocalDate();
         }
         if (targetType == LocalTime.class) {
             return LocalDateTime.ofInstant(Instant.ofEpochMilli(randomTimeStamp(4, 3)), ZoneId.systemDefault()).toLocalTime();

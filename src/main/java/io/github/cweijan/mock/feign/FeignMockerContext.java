@@ -37,8 +37,7 @@ public class FeignMockerContext {
 
         return (T) PROXY_CACHE.computeIfAbsent(controllerClass, keyClass -> {
             validateClass(controllerClass);
-            Class<?> feignInterface = FeignBuilder.generateFeignInterface(controllerClass);
-            Object feignClient = FeignBuilder.createFeignClient(controllerClass, feignInterface, context);
+            Object feignClient = FeignBuilder.createFeignClient(controllerClass, context);
             return FeignBuilder.generateProxy(controllerClass, feignClient);
         });
     }
@@ -49,7 +48,7 @@ public class FeignMockerContext {
 
         if (AnnotationUtils.findAnnotation(controllerClass, Controller.class) == null
                 && controllerClass.getAnnotation(FeignClient.class) == null) {
-            throw new UnsupportedOperationException("仅支持创建controller代理对象!");
+            throw new UnsupportedOperationException("只支持创建controller代理对象!");
         }
 
     }

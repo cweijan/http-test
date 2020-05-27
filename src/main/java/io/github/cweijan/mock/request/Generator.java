@@ -71,7 +71,7 @@ public class Generator {
     }
 
     public static <T> Set<T> set(Class<T> targetType) {
-        return set(targetType,Generator.range(1, 5));
+        return set(targetType, Generator.range(1, 5));
     }
 
     public static <T> Set<T> set(Class<T> targetType, int length) {
@@ -86,6 +86,14 @@ public class Generator {
     public static <T> List<T> list(Class<T> targetType, int length) {
         Stream<T> objStream = IntStream.range(0, length).mapToObj(operand -> request(targetType));
         return objStream.collect(Collectors.toList());
+    }
+
+    public static Object peak(Object... values) {
+        int length = values.length;
+        if (length == 0) return null;
+
+        int range = range(0, length-1);
+        return values[range];
     }
 
     /**
@@ -123,7 +131,7 @@ public class Generator {
             return new Integer(random.nextInt(256)).byteValue();
         }
 
-        if (targetType == Date.class) {
+        if (Date.class.isAssignableFrom(targetType)) {
             return new Date();
         }
         if (targetType == LocalDateTime.class) {

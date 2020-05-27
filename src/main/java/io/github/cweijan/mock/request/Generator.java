@@ -9,10 +9,9 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.lang.Nullable;
 
 import java.lang.reflect.Field;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.time.*;
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -104,9 +103,32 @@ public class Generator {
     }
 
     /**
+     * 返回当前时间戳
+     *
+     * @return 时间戳
+     */
+    public static long timestamp() {
+        return System.currentTimeMillis();
+    }
+
+    /**
+     * 随机生成指定范围内的一个时间戳
+     * @param start n天之前
+     * @param end n天之后
+     * @return long时间戳
+     */
+    public static long randomTimeStamp(int start,int end) {
+        LocalDate now = LocalDate.now();
+        long startLong = now.minusDays(start).atStartOfDay(ZoneOffset.systemDefault()).toInstant().toEpochMilli();
+        long endLong = now.plusDays(end).atStartOfDay(ZoneOffset.systemDefault()).toInstant().toEpochMilli();
+        return ThreadLocalRandom.current().longs(startLong, endLong).findAny().orElseThrow(RuntimeException::new);
+    }
+
+    /**
      * 随机返回参数列表内的任意一个参数
+     *
      * @param values 参数列表
-     * @return
+     * @return object
      */
     public static Object peak(Object... values) {
         int length = values.length;
@@ -152,16 +174,17 @@ public class Generator {
         }
 
         if (Date.class.isAssignableFrom(targetType)) {
-            return new Date();
+            return new Date(randomTimeStamp(4,3));
         }
         if (targetType == LocalDateTime.class) {
-            return LocalDateTime.now();
+            return LocalDateTime.ofInstant(Instant.ofEpochMilli(randomTimeStamp(4,3)), ZoneId.systemDefault());
         }
+
         if (targetType == LocalDate.class) {
-            return LocalDate.now();
+            return LocalDate.ofEpochDay(randomTimeStamp(4,3));
         }
         if (targetType == LocalTime.class) {
-            return LocalTime.now();
+            return LocalDateTime.ofInstant(Instant.ofEpochMilli(randomTimeStamp(4,3)), ZoneId.systemDefault()).toLocalTime();
         }
 
         return null;
@@ -171,6 +194,9 @@ public class Generator {
         Class<?> targetType = field.getType();
         Class<?> genericType = ReflectUtils.getGenericType(field);
         if (Collection.class.isAssignableFrom(targetType)) {
+            if (genericType == null) {
+                genericType = Object.class;
+            }
             if (List.class.isAssignableFrom(targetType)) {
                 return list(genericType);
             }

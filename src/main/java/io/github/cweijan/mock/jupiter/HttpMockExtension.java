@@ -1,11 +1,11 @@
 package io.github.cweijan.mock.jupiter;
 
-import io.github.cweijan.mock.util.ReflectUtils;
 import org.junit.jupiter.api.extension.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.ReflectionUtils;
 
 import javax.annotation.Resource;
 import java.lang.reflect.Field;
@@ -53,7 +53,8 @@ public class HttpMockExtension implements ParameterResolver, TestInstancePostPro
             if (declaredField.getDeclaredAnnotation(Autowired.class) != null
                     || declaredField.getDeclaredAnnotation(Resource.class) != null
                     || declaredField.getDeclaredAnnotation(Qualifier.class) != null) {
-                ReflectUtils.setFieldValue(o, declaredField, mockInstanceHolder.getInstance(declaredField.getType()));
+                declaredField.setAccessible(true);
+                ReflectionUtils.setField(declaredField,o,mockInstanceHolder.getInstance(declaredField.getType()));
             }
         }
     }

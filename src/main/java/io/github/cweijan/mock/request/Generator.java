@@ -3,12 +3,14 @@ package io.github.cweijan.mock.request;
 import io.github.cweijan.mock.feign.FeignBuilder;
 import io.github.cweijan.mock.request.string.ChineseStringGenerator;
 import io.github.cweijan.mock.request.string.StringGenerator;
-import io.github.cweijan.mock.util.ReflectUtils;
 import org.springframework.beans.BeanInstantiationException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.lang.Nullable;
+import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.time.*;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
@@ -43,7 +45,8 @@ public class Generator {
 
         Field[] fields = instance.getClass().getDeclaredFields();
         for (Field field : fields) {
-            ReflectUtils.setFieldValue(instance, field, auto(field));
+            field.setAccessible(true);
+            ReflectionUtils.setField(field, instance, auto(field));
 
         }
         return (T) instance;
@@ -113,11 +116,12 @@ public class Generator {
 
     /**
      * 随机生成指定范围内的一个时间戳
+     *
      * @param start n天之前
-     * @param end n天之后
+     * @param end   n天之后
      * @return long时间戳
      */
-    public static long randomTimeStamp(int start,int end) {
+    public static long randomTimeStamp(int start, int end) {
         LocalDate now = LocalDate.now();
         long startLong = now.minusDays(start).atStartOfDay(ZoneOffset.systemDefault()).toInstant().toEpochMilli();
         long endLong = now.plusDays(end).atStartOfDay(ZoneOffset.systemDefault()).toInstant().toEpochMilli();
@@ -174,17 +178,17 @@ public class Generator {
         }
 
         if (Date.class.isAssignableFrom(targetType)) {
-            return new Date(randomTimeStamp(4,3));
+            return new Date(randomTimeStamp(4, 3));
         }
         if (targetType == LocalDateTime.class) {
-            return LocalDateTime.ofInstant(Instant.ofEpochMilli(randomTimeStamp(4,3)), ZoneId.systemDefault());
+            return LocalDateTime.ofInstant(Instant.ofEpochMilli(randomTimeStamp(4, 3)), ZoneId.systemDefault());
         }
 
         if (targetType == LocalDate.class) {
-            return LocalDate.ofEpochDay(randomTimeStamp(4,3));
+            return LocalDate.ofEpochDay(randomTimeStamp(4, 3));
         }
         if (targetType == LocalTime.class) {
-            return LocalDateTime.ofInstant(Instant.ofEpochMilli(randomTimeStamp(4,3)), ZoneId.systemDefault()).toLocalTime();
+            return LocalDateTime.ofInstant(Instant.ofEpochMilli(randomTimeStamp(4, 3)), ZoneId.systemDefault()).toLocalTime();
         }
 
         return null;
@@ -192,8 +196,8 @@ public class Generator {
 
     private static Object auto(Field field) {
         Class<?> targetType = field.getType();
-        Class<?> genericType = ReflectUtils.getGenericType(field);
         if (Collection.class.isAssignableFrom(targetType)) {
+            Class<?> genericType = getGenericType(field.getGenericType());
             if (genericType == null) {
                 genericType = Object.class;
             }
@@ -205,5 +209,32 @@ public class Generator {
             }
         }
         return auto(targetType);
+    }
+
+    /**
+     * 根据type查找泛型,没有泛型则返回空
+     * method 返回值: getGenericReturnType
+     * parameter 泛型: getParameterizedType
+     *
+     * @return
+     */
+    private static Class<?> getGenericType(Type type) {
+        if (type == null) {
+            return null;
+        }
+        if (ParameterizedType.class.isAssignableFrom(type.getClass())) {
+            List<Class<?>> classes = Stream.of(((ParameterizedType) type).getActualTypeArguments()).map(tempType -> {
+                if (Class.class.isAssignableFrom(tempType.getClass())) {
+                    return (Class<?>) tempType;
+                } else {
+                    return (Class<?>) ((ParameterizedType) tempType).getRawType();
+                }
+            }).collect(Collectors.toList());
+            if (classes.size() > 0) {
+                return classes.get(0);
+            }
+            return null;
+        }
+        return null;
     }
 }

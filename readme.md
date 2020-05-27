@@ -63,6 +63,7 @@
     import io.github.cweijan.mock.jupiter.HttpTest;
     import io.github.cweijan.mock.request.Generator;
     import org.junit.jupiter.api.Test;
+    import org.junit.jupiter.api.BeforeAll;
     
     import javax.annotation.Resource;
     
@@ -73,12 +74,12 @@
         @Resource
         private UserController userController;
     
-        @Test
-        void testAddToken(){
-           //该拦截器对所有请求都生效
-           Mocker.apiInterceptor((RequestTemplate requestTemplate) -> {
-               requestTemplate.header("token","testToken");
-           });
+        @BeforeAll
+        public static void addToken(){
+            //配置全局拦截器
+            Mocker.apiInterceptor(template -> {
+                template.header("token","c2f678d4873c472c8f99940e8cf39fe4");
+            });
         }
    
         // 注意, 必须使用junit5: org.junit.jupiter.api.Test

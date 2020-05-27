@@ -2,6 +2,12 @@
 
 该项目用于帮助Java开发人员快速测试SpringMvc接口
 
+- [HTTP-Test](#http-test)
+- [快速开始](#快速开始)
+- [Why Junit5?](#why-junit5)
+- [常用API](#常用api)
+- [实现原理](#实现原理)
+
 # 快速开始
 1. 引入依赖
     - maven:
@@ -94,6 +100,13 @@
     
     }
     ```
+# Why Junit5?
+该工具必须使用Junit5, 可能会让你困惑于junit4和junit5的异同, 这里简单介绍下
+1. Junit5提供了统一接口方便用于扩展测试, 而junit4想扩展必须管理所有测试的生命周期
+2. Junit5许多有用的新功能, 比如参数化测试、重复测试, 详情可查阅[文档](https://junit.org/junit5/docs/current/user-guide/#writing-tests)
+3. spring-boot-test自2.2.0(2019/10/18)后默认使用junit5, 毫无疑问junit5将逐步取代junit4
+
+
 # 常用API
 - Generator: 用于生成mock数据
 - Asserter: 用于对数据进行断言验证

@@ -8,6 +8,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.lang.Nullable;
 import org.springframework.util.ReflectionUtils;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -41,7 +42,7 @@ public class Generator {
             return (T) auto(paramClass);
         }
 
-        Object instance = BeanUtils.instantiateClass(paramClass);
+        T instance = BeanUtils.instantiateClass(paramClass);
 
         Field[] fields = instance.getClass().getDeclaredFields();
         for (Field field : fields) {
@@ -49,7 +50,7 @@ public class Generator {
             ReflectionUtils.setField(field, instance, auto(field));
 
         }
-        return (T) instance;
+        return instance;
     }
 
     /**
@@ -57,7 +58,7 @@ public class Generator {
      *
      * @return 随机中文字符串
      */
-    public static String cword() {
+    public static String chineseWord() {
         return stringGenerator.genrate(2);
     }
 
@@ -72,33 +73,67 @@ public class Generator {
         return random.nextInt(end) + start;
     }
 
+    /**
+     * 生成指定类型set mock
+     * @param targetType 目标类型
+     * @return 目标类型set
+     */
     public static <T> Set<T> set(Class<T> targetType) {
         return set(targetType, Generator.range(1, 5));
     }
 
+    /**
+     * 生成指定类型set mock
+     * @param targetType 目标类型
+     * @param length 长度
+     * @return 目标类型set
+     */
     public static <T> Set<T> set(Class<T> targetType, int length) {
         Stream<T> objStream = IntStream.range(0, length).mapToObj(operand -> request(targetType));
         return objStream.collect(Collectors.toSet());
     }
 
     /**
-     * 根据类型随机生成list
+     * 生成指定类型数组mock
      *
      * @param targetType 目标类型
-     * @param <T>
-     * @return
+     * @return 目标类型数组
+     */
+    public static <T> T[] array(Class<T> targetType) {
+        return array(targetType, Generator.range(1, 5));
+    }
+
+    /**
+     * 生成指定类型数组mock
+     *
+     * @param targetType 目标类型
+     * @param length     数组长度
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> T[] array(Class<T> targetType, int length) {
+        T[] tArray = (T[]) Array.newInstance(targetType, length);
+        for (int i = 0; i < tArray.length; i++) {
+            tArray[i] =request(targetType);
+        }
+        return tArray;
+    }
+
+    /**
+     * 生成指定类型list mock
+     *
+     * @param targetType 目标类型
+     * @return 目标类型list
      */
     public static <T> List<T> list(Class<T> targetType) {
         return list(targetType, Generator.range(1, 5));
     }
 
     /**
-     * 根据类型随机生成list
+     * 生成指定类型list mock
      *
      * @param targetType 目标类型
-     * @param length     list最大长度
-     * @param <T>
-     * @return
+     * @param length     list长度
+     * @return 目标类型list
      */
     public static <T> List<T> list(Class<T> targetType, int length) {
         Stream<T> objStream = IntStream.range(0, length).mapToObj(operand -> request(targetType));
@@ -152,7 +187,7 @@ public class Generator {
     public static Object auto(Class<?> targetType) {
 
         if (targetType == String.class) {
-            return cword();
+            return chineseWord();
         }
         if (targetType.isEnum()) {
             Object[] enumConstants = targetType.getEnumConstants();
@@ -216,7 +251,7 @@ public class Generator {
      * method 返回值: getGenericReturnType
      * parameter 泛型: getParameterizedType
      *
-     * @return
+     * @return 泛型类型
      */
     private static Class<?> getGenericType(Type type) {
         if (type == null) {

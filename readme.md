@@ -77,7 +77,7 @@
         @BeforeAll
         public static void addToken(){
             //配置全局拦截器
-            Mocker.apiInterceptor(template -> {
+            Mocker.addRequestInterceptor(template -> {
                 template.header("token","c2f678d4873c472c8f99940e8cf39fe4");
             });
         }

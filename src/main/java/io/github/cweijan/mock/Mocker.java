@@ -3,6 +3,8 @@ package io.github.cweijan.mock;
 import feign.RequestInterceptor;
 import io.github.cweijan.mock.context.HttpMockContext;
 import io.github.cweijan.mock.feign.FeignMockerContext;
+import io.github.cweijan.mock.feign.SpringCodecHolder;
+import org.springframework.http.converter.HttpMessageConverter;
 
 /**
  * @author cweijan
@@ -33,10 +35,12 @@ public class Mocker {
         return FeignMockerContext.getFeignClientWrapper(controllerClass, context);
     }
 
-
-    public static void apiInterceptor(RequestInterceptor requestInterceptor) {
+    public static void addRequestInterceptor(RequestInterceptor requestInterceptor) {
         FeignMockerContext.addInterceptor(requestInterceptor);
     }
 
+    public static void addHttpMesagerConvert(HttpMessageConverter<?> httpMessageConverter){
+        SpringCodecHolder.addHttpMessageConveter(httpMessageConverter);
+    }
 
 }

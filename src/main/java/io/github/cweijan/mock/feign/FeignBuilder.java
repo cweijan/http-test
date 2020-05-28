@@ -13,22 +13,13 @@ import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.description.annotation.AnnotationDescription;
 import net.bytebuddy.description.modifier.Visibility;
 import net.bytebuddy.dynamic.DynamicType;
-import org.springframework.beans.factory.ObjectFactory;
-import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
 import org.springframework.cloud.openfeign.SpringQueryMap;
-import org.springframework.cloud.openfeign.support.*;
+import org.springframework.cloud.openfeign.support.ResponseEntityDecoder;
+import org.springframework.cloud.openfeign.support.SpringMvcContract;
 import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
 import org.springframework.core.ParameterNameDiscoverer;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.format.support.DefaultFormattingConversionService;
-import org.springframework.http.converter.ByteArrayHttpMessageConverter;
-import org.springframework.http.converter.ResourceHttpMessageConverter;
-import org.springframework.http.converter.ResourceRegionHttpMessageConverter;
-import org.springframework.http.converter.StringHttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.http.converter.support.AllEncompassingFormHttpMessageConverter;
-import org.springframework.http.converter.xml.Jaxb2RootElementHttpMessageConverter;
-import org.springframework.http.converter.xml.SourceHttpMessageConverter;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -52,10 +43,6 @@ public class FeignBuilder {
     private static final UrlParser URL_PARSER = new StandardUrlParser();
     private static final FeignClientWrapper FEIGN_CLIENT_WRAPPER = new CglibClient();
     private static final ParameterNameDiscoverer NAME_DISCOVERER = new LocalVariableTableParameterNameDiscoverer();
-    private static final ObjectFactory<HttpMessageConverters> httpMessageConvertersObjectFactory = () -> new HttpMessageConverters(
-            new ByteArrayHttpMessageConverter(), new StringHttpMessageConverter(), new ResourceHttpMessageConverter(),
-            new ResourceRegionHttpMessageConverter(), new SourceHttpMessageConverter<>(), new AllEncompassingFormHttpMessageConverter(),
-            new MappingJackson2HttpMessageConverter(), new Jaxb2RootElementHttpMessageConverter());
 
     private static DynamicType.Builder<?> initMethodBuilder(DynamicType.Builder<?> builder, Method method) {
         DynamicType.Builder.MethodDefinition.ParameterDefinition<?> methodBuild = builder.defineMethod(method.getName(), method.getReturnType(), Visibility.PUBLIC);
@@ -120,10 +107,11 @@ public class FeignBuilder {
     static Object createFeignClient(Class<?> controllerClass, HttpMockContext mockContext) {
         Class<?> feignInterface = generateFeignInterface(controllerClass);
         String url = URL_PARSER.parse(mockContext, controllerClass);
+
         return Feign.builder()
                 .requestInterceptors(REQUEST_INTERCEPTORS)
-                .encoder(new PageableSpringEncoder(new SpringEncoder(httpMessageConvertersObjectFactory)))
-                .decoder(new OptionalDecoder(new ResponseEntityDecoder(new SpringDecoder(httpMessageConvertersObjectFactory))))
+                .encoder(SpringCodecHolder.getEncoder())
+                .decoder(new OptionalDecoder(new ResponseEntityDecoder(SpringCodecHolder.getDecoder())))
                 .contract(new SpringMvcContract(Collections.emptyList(), new DefaultFormattingConversionService()))
                 .target(feignInterface, url);
     }

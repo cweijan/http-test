@@ -19,14 +19,14 @@ public class StandardFeignInvoke implements FeignInvoke {
     }
 
     @Override
-    public Object invoke(Method method, Object[] args) {
+    public Object invoke(Method method, Object[] args) throws Throwable {
         System.out.println("Request Method: " + method.getName() + ", Request Param: " + JSON.toJSON(args));
-        Object invoke = null;
+        Object invoke;
         try {
             Method feignMethod = feignClient.getClass().getMethod(method.getName(), method.getParameterTypes());
             invoke = feignMethod.invoke(feignClient, args);
-        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-            throw new RuntimeException(e);
+        } catch (InvocationTargetException e) {
+            throw e.getTargetException();
         }
         System.out.println("Response Body: " + JSON.toJSON(invoke));
         System.out.println("-----------------------------------------------------------------------------------------------------------------------");

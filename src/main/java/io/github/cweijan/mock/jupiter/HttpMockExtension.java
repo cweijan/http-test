@@ -1,6 +1,9 @@
 package io.github.cweijan.mock.jupiter;
 
+import ch.qos.logback.classic.LoggerContext;
 import org.junit.jupiter.api.extension.*;
+import org.slf4j.ILoggerFactory;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.annotation.AnnotationUtils;
@@ -21,7 +24,7 @@ public class HttpMockExtension implements ParameterResolver, TestInstancePostPro
 
     @Override
     public void postProcessTestInstance(Object testInstance, ExtensionContext extensionContext) {
-
+        disableLoggin();
         initContext(testInstance);
         resolveInject(testInstance);
 
@@ -41,6 +44,13 @@ public class HttpMockExtension implements ParameterResolver, TestInstancePostPro
     private void initContext(Object testInstance) {
         HttpTest httpTest = testInstance.getClass().getAnnotation(HttpTest.class);
         this.mockInstanceHolder = new MockInstanceHolder(httpTest.scheme(), httpTest.host(), httpTest.port());
+    }
+
+    private void disableLoggin() {
+        ILoggerFactory iLoggerFactory = LoggerFactory.getILoggerFactory();
+        if(iLoggerFactory.getClass()== LoggerContext.class){
+            ((LoggerContext) iLoggerFactory).reset();
+        }
     }
 
     private void resolveInject(Object o) {

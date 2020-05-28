@@ -8,6 +8,6 @@ import java.lang.reflect.Method;
  */
 public interface FeignInvoke {
 
-    Object invoke(Method method, Object[] args);
+    Object invoke(Method method, Object[] args) throws Throwable;
 
 }

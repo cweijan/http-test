@@ -10,6 +10,8 @@ import org.springframework.objenesis.ObjenesisHelper;
  * @since 2020/05/26 14:23
  */
 public class CglibClient implements FeignClientWrapper {
+
+    @SuppressWarnings("unchecked")
     @Override
     public <T> T create(Class<T> controllerClass, FeignInvoke feignInvoke) {
 
@@ -20,4 +22,5 @@ public class CglibClient implements FeignClientWrapper {
         Enhancer.registerCallbacks(dynamicClass, new Callback[]{(MethodInterceptor) (o1, method, args, methodProxy) -> feignInvoke.invoke(method, args)});
         return (T) ObjenesisHelper.newInstance(dynamicClass);
     }
+
 }

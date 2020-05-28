@@ -2,9 +2,6 @@ package io.github.cweijan.mock.feign;
 
 import feign.RequestInterceptor;
 import io.github.cweijan.mock.context.HttpMockContext;
-import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.core.annotation.AnnotationUtils;
-import org.springframework.stereotype.Controller;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -36,20 +33,10 @@ public class FeignMockerContext {
     public static <T> T getFeignClientWrapper(Class<T> controllerClass, HttpMockContext context) {
 
         return (T) PROXY_CACHE.computeIfAbsent(controllerClass, keyClass -> {
-            validateClass(controllerClass);
+            Objects.requireNonNull(controllerClass);
             Object feignClient = FeignBuilder.createFeignClient(controllerClass, context);
             return FeignBuilder.generateProxy(controllerClass, feignClient);
         });
     }
 
-    private static <T> void validateClass(Class<T> controllerClass) {
-
-        Objects.requireNonNull(controllerClass);
-
-        if (AnnotationUtils.findAnnotation(controllerClass, Controller.class) == null
-                && controllerClass.getAnnotation(FeignClient.class) == null) {
-            throw new UnsupportedOperationException("只支持创建controller代理对象!");
-        }
-
-    }
 }

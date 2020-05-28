@@ -4,6 +4,8 @@ import feign.Feign;
 import feign.RequestInterceptor;
 import feign.optionals.OptionalDecoder;
 import io.github.cweijan.mock.context.HttpMockContext;
+import io.github.cweijan.mock.feign.parse.StandardUrlParser;
+import io.github.cweijan.mock.feign.parse.UrlParser;
 import io.github.cweijan.mock.feign.proxy.CglibClient;
 import io.github.cweijan.mock.feign.proxy.FeignClientWrapper;
 import io.github.cweijan.mock.feign.proxy.StandardFeignInvoke;
@@ -46,19 +48,14 @@ import java.util.List;
  */
 public class FeignBuilder {
 
+    static final List<RequestInterceptor> REQUEST_INTERCEPTORS = new ArrayList<>();
+    private static final UrlParser URL_PARSER = new StandardUrlParser();
     private static final FeignClientWrapper FEIGN_CLIENT_WRAPPER = new CglibClient();
     private static final ParameterNameDiscoverer NAME_DISCOVERER = new LocalVariableTableParameterNameDiscoverer();
     private static final ObjectFactory<HttpMessageConverters> httpMessageConvertersObjectFactory = () -> new HttpMessageConverters(
-            new ByteArrayHttpMessageConverter(),
-            new StringHttpMessageConverter(),
-            new ResourceHttpMessageConverter(),
-            new ResourceRegionHttpMessageConverter(),
-            new SourceHttpMessageConverter<>(),
-            new AllEncompassingFormHttpMessageConverter(),
-            new MappingJackson2HttpMessageConverter(),
-            new Jaxb2RootElementHttpMessageConverter()
-    );
-    static final List<RequestInterceptor> REQUEST_INTERCEPTORS = new ArrayList<>();
+            new ByteArrayHttpMessageConverter(), new StringHttpMessageConverter(), new ResourceHttpMessageConverter(),
+            new ResourceRegionHttpMessageConverter(), new SourceHttpMessageConverter<>(), new AllEncompassingFormHttpMessageConverter(),
+            new MappingJackson2HttpMessageConverter(), new Jaxb2RootElementHttpMessageConverter());
 
     private static DynamicType.Builder<?> initMethodBuilder(DynamicType.Builder<?> builder, Method method) {
         DynamicType.Builder.MethodDefinition.ParameterDefinition<?> methodBuild = builder.defineMethod(method.getName(), method.getReturnType(), Visibility.PUBLIC);
@@ -69,12 +66,9 @@ public class FeignBuilder {
             Parameter parameter = parameters[i];
             if (isQuery && parameter.getAnnotations().length == 0) {
                 methodBuild = methodBuild.withParameter(parameter.getType(), parameterNames != null ? parameterNames[i] : null)
-                        .annotateParameter(
-                                AnnotationDescription.Builder.ofType(isSimple(parameter.getType()) ? RequestParam.class : SpringQueryMap.class).build()
-                        );
+                        .annotateParameter(AnnotationDescription.Builder.ofType(isSimple(parameter.getType()) ? RequestParam.class : SpringQueryMap.class).build());
             } else {
-                methodBuild = methodBuild.withParameter(parameter.getType(), parameter.getName())
-                        .annotateParameter(parameter.getAnnotations());
+                methodBuild = methodBuild.withParameter(parameter.getType(), parameter.getName()).annotateParameter(parameter.getAnnotations());
             }
         }
 
@@ -86,7 +80,7 @@ public class FeignBuilder {
         return type.isPrimitive() ||
                 Temporal.class.isAssignableFrom(type) ||
                 Date.class.isAssignableFrom(type) ||
-                type.getPackage().getName().startsWith("java.lang");
+                (type.getPackage() != null && type.getPackage().getName().startsWith("java.lang"));
     }
 
     /**
@@ -117,34 +111,21 @@ public class FeignBuilder {
     }
 
     /**
-     * 创建一个代理类并加入上下文map
+     * 创建一个feign客户端并存进上下文
      *
-     * @param controllerClass     原始类型
-     * @param mockContext    spring应用web上下文信息
-     * @return
+     * @param controllerClass 原始类型
+     * @param mockContext     spring应用web上下文信息
+     * @return feign实例
      */
     static Object createFeignClient(Class<?> controllerClass, HttpMockContext mockContext) {
         Class<?> feignInterface = generateFeignInterface(controllerClass);
-        String scheme = mockContext.getScheme();
-        String host = mockContext.getHost();
-        Integer port = mockContext.getPort();
-
-        RequestMapping requestMapping = controllerClass.getAnnotation(RequestMapping.class);
-        String path;
-        if (requestMapping != null) {
-            String[] value = requestMapping.value();
-            path = value.length > 0 ? value[0] : "/";
-        } else {
-            path = "/";
-        }
-
+        String url = URL_PARSER.parse(mockContext, controllerClass);
         return Feign.builder()
                 .requestInterceptors(REQUEST_INTERCEPTORS)
                 .encoder(new PageableSpringEncoder(new SpringEncoder(httpMessageConvertersObjectFactory)))
                 .decoder(new OptionalDecoder(new ResponseEntityDecoder(new SpringDecoder(httpMessageConvertersObjectFactory))))
                 .contract(new SpringMvcContract(Collections.emptyList(), new DefaultFormattingConversionService()))
-                .target(feignInterface, scheme + "://" + host + ":" + port + path);
+                .target(feignInterface, url);
     }
-
 
 }

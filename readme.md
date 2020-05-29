@@ -15,13 +15,13 @@
     <dependency>
         <groupId>io.github.cweijan</groupId>
         <artifactId>http-test</artifactId>
-        <version>0.0.1</version>
+        <version>0.0.3</version>
         <scope>test</scope>
     </dependency>
     ```
     - gradle:
     ```groovy
-    testCompile 'io.github.cweijan:http-test:0.0.1'
+    testCompile 'io.github.cweijan:http-test:0.0.3'
     ```
 2. 假设有以下controller, 启动springboot应用
     ```java

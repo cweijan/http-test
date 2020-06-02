@@ -51,7 +51,7 @@ public class FeignBuilder {
         String[] parameterNames = NAME_DISCOVERER.getParameterNames(method);
         for (int i = 0; i < parameters.length; i++) {
             Parameter parameter = parameters[i];
-            if (isQuery && parameter.getAnnotations().length == 0) {
+            if (isQuery) {
                 methodBuild = methodBuild.withParameter(parameter.getType(), parameterNames != null ? parameterNames[i] : null)
                         .annotateParameter(AnnotationDescription.Builder.ofType(isSimple(parameter.getType()) ? RequestParam.class : SpringQueryMap.class).build());
             } else {
@@ -111,6 +111,7 @@ public class FeignBuilder {
         return Feign.builder()
                 .requestInterceptors(REQUEST_INTERCEPTORS)
                 .encoder(SpringCodecHolder.getEncoder())
+                .client(new AutoOutputClient(null,null))
                 .decoder(new OptionalDecoder(new ResponseEntityDecoder(SpringCodecHolder.getDecoder())))
                 .contract(new SpringMvcContract(Collections.emptyList(), new DefaultFormattingConversionService()))
                 .target(feignInterface, url);

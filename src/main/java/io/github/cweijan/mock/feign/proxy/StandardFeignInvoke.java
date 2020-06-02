@@ -1,7 +1,6 @@
 package io.github.cweijan.mock.feign.proxy;
 
 
-import feign.FeignException;
 import io.github.cweijan.mock.util.JSON;
 
 import java.lang.reflect.InvocationTargetException;
@@ -27,15 +26,8 @@ public class StandardFeignInvoke implements FeignInvoke {
             Method feignMethod = feignClient.getClass().getMethod(method.getName(), method.getParameterTypes());
             invoke = feignMethod.invoke(feignClient, args);
         } catch (InvocationTargetException e) {
-            Throwable targetException = e.getTargetException();
-            if(targetException instanceof FeignException){
-                System.out.println("Response Body: " + ((FeignException) targetException).contentUTF8());
-                System.out.println("-----------------------------------------------------------------------------------------------------------------------");
-            }
             throw e.getTargetException();
         }
-        System.out.println("Response Body: " + JSON.toJSON(invoke));
-        System.out.println("-----------------------------------------------------------------------------------------------------------------------");
         return invoke;
     }
 }

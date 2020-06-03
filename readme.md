@@ -67,32 +67,31 @@
     
     import javax.annotation.Resource;
     
-    @HttpTest(host = "localhost",port = 8080)
+    @HttpTest
     public class UserControllerTest {
     
-        //仅支持注入controller和feignClient
+        // 可注入controller和feignClient
         @Resource
         private UserController userController;
     
         @BeforeAll
         public static void addToken(){
-            //配置全局拦截器
-            Mocker.addRequestInterceptor(template -> {
-                template.header("token","c2f678d4873c472c8f99940e8cf39fe4");
-            });
+            // 配置拦截器
+            Mocker.addRequestInterceptor(template -> template.header("token","c2f678d4873c472c8f99940e8cf39fe4") );
         }
    
-        // 注意, 必须使用junit5: org.junit.jupiter.api.Test
+        // 必须使用junit5: org.junit.jupiter.api.Test
         @Test
         void saveUser() {
     
             //创建mock数据
             SaveUserDTO saveUserDTO = Generator.request(SaveUserDTO.class);
+   
             // 当调用方法时会直接发送http请求
             UserVo userVo=userController.saveUser(saveUserDTO);
-    
             UserVO user = userController.getUser(userVo.getId());
     
+            // 进行断言验证
             Asserter.assertSame(userVo,user);
     
             userController.deleteByUserId(userVo.getId());

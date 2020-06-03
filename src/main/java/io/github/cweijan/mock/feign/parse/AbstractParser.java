@@ -13,10 +13,15 @@ public abstract class AbstractParser implements UrlParser {
     public String parse(HttpMockContext httpMockContext, Class<?> controllerClass) {
         return getScheme(httpMockContext, controllerClass) + "://" +
                 getHost(httpMockContext, controllerClass) +
+                getContextPath(httpMockContext, controllerClass) +
                 getPath(httpMockContext, controllerClass);
     }
 
     protected abstract String getPath(HttpMockContext httpMockContext, Class<?> controllerClass);
+
+    protected String getContextPath(HttpMockContext httpMockContext, Class<?> controllerClass) {
+        return httpMockContext.getContextPath();
+    }
 
     protected String getHost(HttpMockContext httpMockContext, Class<?> controllerClass) {
         return httpMockContext.getHost() + ":" + httpMockContext.getPort();

@@ -12,10 +12,7 @@ public class HttpMockContext {
     private final String contextPath;
 
     public HttpMockContext(String scheme, String host, Integer port) {
-        this.scheme = scheme;
-        this.host = host;
-        this.port = port;
-        this.contextPath = "";
+        this(scheme,host,port,null);
     }
 
     public HttpMockContext(String scheme, String host, Integer port, String contextPath) {

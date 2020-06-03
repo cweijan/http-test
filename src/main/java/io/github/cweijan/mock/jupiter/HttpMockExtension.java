@@ -1,6 +1,7 @@
 package io.github.cweijan.mock.jupiter;
 
 import ch.qos.logback.classic.LoggerContext;
+import io.github.cweijan.mock.context.HttpMockContext;
 import org.junit.jupiter.api.extension.*;
 import org.slf4j.ILoggerFactory;
 import org.slf4j.LoggerFactory;
@@ -43,12 +44,13 @@ public class HttpMockExtension implements ParameterResolver, TestInstancePostPro
 
     private void initContext(Object testInstance) {
         HttpTest httpTest = testInstance.getClass().getAnnotation(HttpTest.class);
-        this.mockInstanceHolder = new MockInstanceHolder(httpTest.scheme(), httpTest.host(), httpTest.port());
+        HttpMockContext context = new HttpMockContext(httpTest.scheme(), httpTest.host(), httpTest.port(), httpTest.contextPath());
+        this.mockInstanceHolder = new MockInstanceHolder(context);
     }
 
     private void disableLoggin() {
         ILoggerFactory iLoggerFactory = LoggerFactory.getILoggerFactory();
-        if(iLoggerFactory.getClass()== LoggerContext.class){
+        if (iLoggerFactory.getClass() == LoggerContext.class) {
             ((LoggerContext) iLoggerFactory).reset();
         }
     }
@@ -64,7 +66,7 @@ public class HttpMockExtension implements ParameterResolver, TestInstancePostPro
                     || declaredField.getDeclaredAnnotation(Resource.class) != null
                     || declaredField.getDeclaredAnnotation(Qualifier.class) != null) {
                 declaredField.setAccessible(true);
-                ReflectionUtils.setField(declaredField,o,mockInstanceHolder.getInstance(declaredField.getType()));
+                ReflectionUtils.setField(declaredField, o, mockInstanceHolder.getInstance(declaredField.getType()));
             }
         }
     }

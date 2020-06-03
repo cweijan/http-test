@@ -15,6 +15,10 @@ import java.lang.annotation.*;
 @ExtendWith(HttpMockExtension.class)
 public @interface HttpTest {
     String host() default "127.0.0.1";
+
     int port();
+
     String scheme() default "http";
+
+    String contextPath() default "";
 }

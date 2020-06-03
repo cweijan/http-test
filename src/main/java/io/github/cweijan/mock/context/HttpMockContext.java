@@ -9,11 +9,20 @@ public class HttpMockContext {
     private final String scheme;
     private final String host;
     private final Integer port;
+    private final String contextPath;
 
     public HttpMockContext(String scheme, String host, Integer port) {
         this.scheme = scheme;
         this.host = host;
         this.port = port;
+        this.contextPath = "";
+    }
+
+    public HttpMockContext(String scheme, String host, Integer port, String contextPath) {
+        this.scheme = scheme;
+        this.host = host;
+        this.port = port;
+        this.contextPath = contextPath;
     }
 
     public String getScheme() {
@@ -28,4 +37,7 @@ public class HttpMockContext {
         return port;
     }
 
+    public String getContextPath() {
+        return contextPath;
+    }
 }

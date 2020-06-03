@@ -35,10 +35,17 @@ public class Mocker {
         return FeignMockerContext.getFeignClientWrapper(controllerClass, context);
     }
 
+    /**
+     * 增加请求拦截器, 对所有请求生效
+     */
     public static void addRequestInterceptor(RequestInterceptor requestInterceptor) {
         FeignMockerContext.addInterceptor(requestInterceptor);
     }
 
+    /**
+     * 增加RequestBody消息转换器(Preview)
+     * @param httpMessageConverter 消息转换器
+     */
     public static void addHttpMesagerConvert(HttpMessageConverter<?> httpMessageConverter){
         SpringCodecHolder.addHttpMessageConveter(httpMessageConverter);
     }

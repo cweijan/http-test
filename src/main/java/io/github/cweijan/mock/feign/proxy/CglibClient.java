@@ -11,6 +11,12 @@ import org.springframework.objenesis.ObjenesisHelper;
  */
 public class CglibClient implements FeignClientWrapper {
 
+    /**
+     * create feign invoker wrapper
+     * @param controllerClass wrapper class
+     * @param feignInvoke invoker
+     * @return feign wrpper proxy
+     */
     @SuppressWarnings("unchecked")
     @Override
     public <T> T create(Class<T> controllerClass, FeignInvoke feignInvoke) {

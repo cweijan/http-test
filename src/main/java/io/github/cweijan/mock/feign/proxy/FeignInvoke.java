@@ -8,6 +8,12 @@ import java.lang.reflect.Method;
  */
 public interface FeignInvoke {
 
+    /**
+     * invoke feign client
+     * @param method target method
+     * @param args params
+     * @return response
+     */
     Object invoke(Method method, Object[] args) throws Throwable;
 
 }

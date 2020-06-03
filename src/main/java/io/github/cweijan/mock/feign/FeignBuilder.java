@@ -2,6 +2,7 @@ package io.github.cweijan.mock.feign;
 
 import feign.Feign;
 import feign.RequestInterceptor;
+import feign.Retryer;
 import feign.optionals.OptionalDecoder;
 import io.github.cweijan.mock.context.HttpMockContext;
 import io.github.cweijan.mock.feign.parse.StandardUrlParser;
@@ -108,13 +109,18 @@ public class FeignBuilder {
 
         return Feign.builder()
                 .requestInterceptors(REQUEST_INTERCEPTORS)
+                .retryer(new Retryer.Default(100,1,1))
                 .encoder(SpringCodecHolder.getEncoder())
-                .client(new AutoOutputClient(null, null))
+                .client(new InspectClient(null, null))
                 .decoder(new OptionalDecoder(new ResponseEntityDecoder(SpringCodecHolder.getDecoder())))
                 .contract(new SpringMvcContract(Collections.emptyList(), new DefaultFormattingConversionService()))
                 .target(feignInterface, url);
     }
 
+    /**
+     * check inject class is valid
+     * @param controllerClass inject target class
+     */
     private static <T> void validateClass(Class<T> controllerClass) {
 
         Objects.requireNonNull(controllerClass);

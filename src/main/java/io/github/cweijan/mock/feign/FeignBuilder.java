@@ -13,6 +13,7 @@ import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.description.annotation.AnnotationDescription;
 import net.bytebuddy.description.modifier.Visibility;
 import net.bytebuddy.dynamic.DynamicType;
+import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.cloud.openfeign.support.ResponseEntityDecoder;
 import org.springframework.cloud.openfeign.support.SpringMvcContract;
@@ -20,6 +21,7 @@ import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
 import org.springframework.core.ParameterNameDiscoverer;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.format.support.DefaultFormattingConversionService;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,10 +30,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.time.temporal.Temporal;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author cweijan
@@ -77,6 +76,7 @@ public class FeignBuilder {
      * @return feign接口
      */
     public static Class<?> generateFeignInterface(Class<?> controllerClass) {
+        validateClass(controllerClass);
         DynamicType.Builder<?> builder = new ByteBuddy().makeInterface().merge(Visibility.PUBLIC);
         for (Method method : controllerClass.getMethods()) {
             if (AnnotationUtils.findAnnotation(method, RequestMapping.class) != null) {
@@ -115,6 +115,17 @@ public class FeignBuilder {
                 .decoder(new OptionalDecoder(new ResponseEntityDecoder(SpringCodecHolder.getDecoder())))
                 .contract(new SpringMvcContract(Collections.emptyList(), new DefaultFormattingConversionService()))
                 .target(feignInterface, url);
+    }
+
+    private static <T> void validateClass(Class<T> controllerClass) {
+
+        Objects.requireNonNull(controllerClass);
+
+        if (AnnotationUtils.findAnnotation(controllerClass, Controller.class) == null
+                && controllerClass.getAnnotation(FeignClient.class) == null) {
+            throw new UnsupportedOperationException("只支持创建controller代理对象!");
+        }
+
     }
 
 }

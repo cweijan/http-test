@@ -22,10 +22,7 @@ import org.springframework.core.ParameterNameDiscoverer;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.format.support.DefaultFormattingConversionService;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
@@ -50,12 +47,13 @@ public class FeignBuilder {
         String[] parameterNames = NAME_DISCOVERER.getParameterNames(method);
         for (int i = 0; i < parameters.length; i++) {
             Parameter parameter = parameters[i];
+            DynamicType.Builder.MethodDefinition.ParameterDefinition.Annotatable<?> tempBuilder = methodBuild.withParameter(parameter.getType(), Objects.requireNonNull(parameterNames)[i]).annotateParameter(parameter.getAnnotations());
             if (isQuery) {
-                methodBuild = methodBuild.withParameter(parameter.getType(), parameterNames != null ? parameterNames[i] : null)
-                        .annotateParameter(AnnotationDescription.Builder.ofType(isSimple(parameter.getType()) ? RequestParam.class : SpringQueryMap.class).build());
-            } else {
-                methodBuild = methodBuild.withParameter(parameter.getType(), parameter.getName()).annotateParameter(parameter.getAnnotations());
+                if (parameter.getAnnotation(PathVariable.class) == null) {
+                    tempBuilder = tempBuilder.annotateParameter(AnnotationDescription.Builder.ofType(isSimple(parameter.getType()) ? RequestParam.class : SpringQueryMap.class).build());
+                }
             }
+            methodBuild = tempBuilder;
         }
 
         builder = methodBuild.withoutCode().annotateMethod(method.getDeclaredAnnotations());
@@ -111,7 +109,7 @@ public class FeignBuilder {
         return Feign.builder()
                 .requestInterceptors(REQUEST_INTERCEPTORS)
                 .encoder(SpringCodecHolder.getEncoder())
-                .client(new AutoOutputClient(null,null))
+                .client(new AutoOutputClient(null, null))
                 .decoder(new OptionalDecoder(new ResponseEntityDecoder(SpringCodecHolder.getDecoder())))
                 .contract(new SpringMvcContract(Collections.emptyList(), new DefaultFormattingConversionService()))
                 .target(feignInterface, url);

@@ -13,7 +13,7 @@ import javax.annotation.Resource;
  * @author cweijan
  * @since 2020/06/03 19:45
  */
-@HttpTest(port = 9092)
+@HttpTest
 public class UserControllerTest {
 
     @Resource

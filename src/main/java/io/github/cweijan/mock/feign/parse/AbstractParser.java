@@ -20,7 +20,8 @@ public abstract class AbstractParser implements UrlParser {
     protected abstract String getPath(HttpMockContext httpMockContext, Class<?> controllerClass);
 
     protected String getContextPath(HttpMockContext httpMockContext, Class<?> controllerClass) {
-        return httpMockContext.getContextPath();
+        String contextPath = httpMockContext.getContextPath();
+        return contextPath==null?"":contextPath;
     }
 
     protected String getHost(HttpMockContext httpMockContext, Class<?> controllerClass) {

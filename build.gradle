@@ -29,6 +29,8 @@ dependencies {
     compile group: 'io.github.openfeign', name: 'feign-core', version: '10.7.4'
     compile group: 'org.springframework.cloud', name: 'spring-cloud-openfeign-core', version: '2.2.2.RELEASE'
 
+    testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.3.0.RELEASE'
+
 }
 
 task sourcesJar(type: Jar) {

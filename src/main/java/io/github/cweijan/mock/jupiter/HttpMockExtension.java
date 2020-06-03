@@ -1,7 +1,7 @@
 package io.github.cweijan.mock.jupiter;
 
 import ch.qos.logback.classic.LoggerContext;
-import io.github.cweijan.mock.context.HttpMockContext;
+import io.github.cweijan.mock.jupiter.environment.HttpMockContextParser;
 import org.junit.jupiter.api.extension.*;
 import org.slf4j.ILoggerFactory;
 import org.slf4j.LoggerFactory;
@@ -44,8 +44,8 @@ public class HttpMockExtension implements ParameterResolver, TestInstancePostPro
 
     private void initContext(Object testInstance) {
         HttpTest httpTest = testInstance.getClass().getAnnotation(HttpTest.class);
-        HttpMockContext context = new HttpMockContext(httpTest.scheme(), httpTest.host(), httpTest.port(), httpTest.contextPath());
-        this.mockInstanceHolder = new MockInstanceHolder(context);
+        HttpMockContextParser contextParser = new HttpMockContextParser(httpTest);
+        this.mockInstanceHolder = new MockInstanceHolder(contextParser.parse());
     }
 
     private void disableLoggin() {

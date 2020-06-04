@@ -3,7 +3,6 @@ package io.github.cweijan.mock.jupiter;
 import ch.qos.logback.classic.LoggerContext;
 import io.github.cweijan.mock.context.HttpMockContext;
 import io.github.cweijan.mock.jupiter.environment.HttpMockContextParser;
-import io.github.cweijan.mock.jupiter.exception.ConnectSpringBootException;
 import org.junit.jupiter.api.extension.*;
 import org.slf4j.ILoggerFactory;
 import org.slf4j.LoggerFactory;
@@ -23,9 +22,10 @@ import java.net.Socket;
  * @author cweijan
  * @since 2020/05/25 16:16
  */
-public class HttpMockExtension implements ParameterResolver, TestInstancePostProcessor {
+public class HttpMockExtension implements ParameterResolver, TestInstancePostProcessor, ExecutionCondition {
 
     private MockInstanceHolder mockInstanceHolder;
+    private String reason;
 
     @Override
     public void postProcessTestInstance(Object testInstance, ExtensionContext extensionContext) {
@@ -53,11 +53,10 @@ public class HttpMockExtension implements ParameterResolver, TestInstancePostPro
         this.mockInstanceHolder = new MockInstanceHolder(mockContext);
     }
 
-    private boolean checkBootRunning(HttpMockContext mockContext) {
-        try (Socket ignored = new Socket(mockContext.getHost(),  mockContext.getPort())) {
-            return true;
+    private void checkBootRunning(HttpMockContext mockContext) {
+        try (Socket ignored = new Socket(mockContext.getHost(), mockContext.getPort())) {
         } catch (IOException ioException) {
-            throw new ConnectSpringBootException(mockContext.getHost(),mockContext.getPort(),ioException);
+            this.reason = "connect fail -> " + mockContext.getHost() + ":" + mockContext.getPort();
         }
     }
 
@@ -83,4 +82,13 @@ public class HttpMockExtension implements ParameterResolver, TestInstancePostPro
             }
         }
     }
+
+    @Override
+    public ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext extensionContext) {
+        if (this.reason != null) {
+            return ConditionEvaluationResult.disabled(this.reason + ", disable " + extensionContext.getDisplayName());
+        }
+        return ConditionEvaluationResult.enabled(null);
+    }
+
 }

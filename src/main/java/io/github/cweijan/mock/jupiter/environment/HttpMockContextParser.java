@@ -17,7 +17,7 @@ public class HttpMockContextParser {
 
     public HttpMockContextParser(HttpTest httpTest) {
         this.httpMockContextReaders.add(new AnnotationReader(httpTest));
-        this.httpMockContextReaders.add(new BootEnvironmentReader());
+        this.httpMockContextReaders.add(new BootEnvironmentReader(httpTest));
     }
 
     public HttpMockContext parse() {

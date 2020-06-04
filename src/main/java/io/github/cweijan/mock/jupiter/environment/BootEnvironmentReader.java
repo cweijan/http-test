@@ -1,5 +1,6 @@
 package io.github.cweijan.mock.jupiter.environment;
 
+import io.github.cweijan.mock.jupiter.HttpTest;
 import org.springframework.boot.context.config.ConfigFileApplicationListener;
 import org.springframework.boot.context.properties.source.ConfigurationPropertySources;
 import org.springframework.core.env.ConfigurableEnvironment;
@@ -20,15 +21,17 @@ public class BootEnvironmentReader extends ConfigFileApplicationListener impleme
     public ConfigurableEnvironment environment;
 
 
-    public BootEnvironmentReader() {
+    public BootEnvironmentReader(HttpTest httpTest) {
         this.environment = new StandardEnvironment();
+        environment.setActiveProfiles(httpTest.activeProfiles());
         ConfigurationPropertySources.attach(environment);
         this.addPropertySources(environment, null);
-        this.environment.merge(getParentEnvironment());
+        this.environment.merge(getParentEnvironment(httpTest));
     }
 
-    private StandardEnvironment getParentEnvironment() {
+    private StandardEnvironment getParentEnvironment(HttpTest httpTest) {
         StandardEnvironment parentEnvironment = new StandardEnvironment();
+        parentEnvironment.setActiveProfiles(httpTest.activeProfiles());
         Map<String, Object> bootstrapMap = new HashMap<>();
         bootstrapMap.put("spring.config.name", BOOTSTRAP_PROPERTY_SOURCE_NAME);
         parentEnvironment.getPropertySources().addFirst(new MapPropertySource(BOOTSTRAP_PROPERTY_SOURCE_NAME, bootstrapMap));

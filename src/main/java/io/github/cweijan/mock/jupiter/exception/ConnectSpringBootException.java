@@ -7,6 +7,6 @@ package io.github.cweijan.mock.jupiter.exception;
  */
 public class ConnectSpringBootException extends RuntimeException{
     public ConnectSpringBootException(String host,Integer port, Throwable cause) {
-        super("连接失败 -> "+host+":"+port, cause);
+        super("connect fail -> "+host+":"+port, cause);
     }
 }

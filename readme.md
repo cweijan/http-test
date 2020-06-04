@@ -15,13 +15,13 @@
     <dependency>
         <groupId>io.github.cweijan</groupId>
         <artifactId>http-test</artifactId>
-        <version>0.0.3</version>
+        <version>0.0.4</version>
         <scope>test</scope>
     </dependency>
     ```
     - gradle:
     ```groovy
-    testCompile 'io.github.cweijan:http-test:0.0.3'
+    testCompile 'io.github.cweijan:http-test:0.0.4'
     ```
 2. 假设有以下controller, 启动springboot应用
     ```java
@@ -64,15 +64,20 @@
     import io.github.cweijan.mock.request.Generator;
     import org.junit.jupiter.api.Test;
     import org.junit.jupiter.api.BeforeAll;
+    import org.springframework.beans.factory.annotation.Value;
     
     import javax.annotation.Resource;
     
     @HttpTest
     public class UserControllerTest {
     
-        // 可注入controller和feignClient
+        // 只能注入controller和feign接口
         @Resource
         private UserController userController;
+   
+        // 和Spring用法一样    
+        @Value("${server.port}")
+        private Integer port;
     
         @BeforeAll
         public static void addToken(){

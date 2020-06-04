@@ -6,6 +6,7 @@ import org.springframework.cglib.proxy.MethodInterceptor;
 import org.springframework.objenesis.ObjenesisHelper;
 
 /**
+ * 用于创建controller代理, 内部代码为调用feign客户端.
  * @author cweijan
  * @since 2020/05/26 14:23
  */

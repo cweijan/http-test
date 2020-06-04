@@ -61,6 +61,11 @@ public class FeignBuilder {
         return builder;
     }
 
+    /**
+     * if class is simple type
+     * @param type parameter type
+     * @return return true when is simple
+     */
     public static boolean isSimple(Class<?> type) {
         return type.isPrimitive() ||
                 Temporal.class.isAssignableFrom(type) ||
@@ -69,7 +74,7 @@ public class FeignBuilder {
     }
 
     /**
-     * 根据目标controller的方法构造出feign接口
+     * Create feign interface class by controller class.
      *
      * @param controllerClass 目标Controlller
      * @return feign接口
@@ -86,18 +91,18 @@ public class FeignBuilder {
     }
 
     /**
-     * 创建目标controller的代理类
+     * create target controller proxy.
      *
-     * @param controllerClass 目标controller
-     * @param feignClient
-     * @return 代理controller
+     * @param controllerClass target controller
+     * @param feignClient feign client
+     * @return proxy controller
      */
     static <T> T generateProxy(Class<T> controllerClass, Object feignClient) {
         return FEIGN_CLIENT_WRAPPER.create(controllerClass, new StandardFeignInvoke(feignClient));
     }
 
     /**
-     * 创建一个feign客户端并存进上下文
+     * create feign client and store to holder.
      *
      * @param controllerClass 原始类型
      * @param mockContext     spring应用web上下文信息

@@ -3,6 +3,7 @@ package io.github.cweijan.mock.request.string;
 import java.util.Random;
 
 /**
+ * Chinese random string generator.
  * @author cweijan
  * @since 2020/05/23 18:15
  */

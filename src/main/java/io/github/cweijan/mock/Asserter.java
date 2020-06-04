@@ -11,6 +11,12 @@ import org.skyscreamer.jsonassert.JSONAssert;
  */
 public class Asserter extends Assertions{
 
+    /**
+     * 对比两个对象的属性是否匹配
+     *
+     * @param expected 原始对象
+     * @param actual   目标对象
+     */
     public static void assertSame(Object expected, Object actual) {
         assertSame(expected, actual, false);
     }
@@ -35,12 +41,18 @@ public class Asserter extends Assertions{
 
     }
 
+    /**
+     * 对比两个对象的属性是否不匹配
+     *
+     * @param expected 原始对象
+     * @param actual   目标对象
+     */
     public static void assertNotSame(Object expected, Object actual) {
         assertNotSame(expected, actual, false);
     }
 
     /**
-     * 对比两个对象的属性是否匹配
+     * 对比两个对象的属性是否不匹配
      *
      * @param expected 原始对象
      * @param actual   目标对象

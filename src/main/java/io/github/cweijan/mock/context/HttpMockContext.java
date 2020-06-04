@@ -1,6 +1,7 @@
 package io.github.cweijan.mock.context;
 
 /**
+ * 整个http测试的上下文相关信息
  * @author cweijan
  * @since 2020/05/25 17:04
  */

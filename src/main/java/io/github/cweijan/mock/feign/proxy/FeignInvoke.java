@@ -3,6 +3,7 @@ package io.github.cweijan.mock.feign.proxy;
 import java.lang.reflect.Method;
 
 /**
+ * feign client执行接口
  * @author cweijan
  * @since 2020/05/26 14:47
  */

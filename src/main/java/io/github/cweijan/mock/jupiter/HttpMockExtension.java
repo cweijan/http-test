@@ -1,22 +1,15 @@
 package io.github.cweijan.mock.jupiter;
 
 import ch.qos.logback.classic.LoggerContext;
-import io.github.cweijan.mock.context.HttpMockContext;
-import io.github.cweijan.mock.jupiter.environment.HttpMockContextParser;
 import org.junit.jupiter.api.extension.*;
 import org.slf4j.ILoggerFactory;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.ReflectionUtils;
 
-import javax.annotation.Resource;
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.net.Socket;
 
 /**
  * @author cweijan
@@ -24,7 +17,7 @@ import java.net.Socket;
  */
 public class HttpMockExtension implements ParameterResolver, TestInstancePostProcessor, ExecutionCondition {
 
-    private MockInstanceHolder mockInstanceHolder;
+    private MockInstanceContext mockInstanceContext;
     private String reason;
 
     @Override
@@ -32,7 +25,6 @@ public class HttpMockExtension implements ParameterResolver, TestInstancePostPro
         disableLoggin();
         initContext(testInstance);
         resolveInject(testInstance);
-
     }
 
     @Override
@@ -40,24 +32,23 @@ public class HttpMockExtension implements ParameterResolver, TestInstancePostPro
         return AnnotationUtils.findAnnotation(parameterContext.getParameter().getType(), Controller.class) != null;
     }
 
-    @Override
-    public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-
-        return mockInstanceHolder.getInstance(parameterContext.getParameter().getType());
-    }
-
     private void initContext(Object testInstance) {
         HttpTest httpTest = testInstance.getClass().getAnnotation(HttpTest.class);
-        HttpMockContext mockContext = new HttpMockContextParser(httpTest).parse();
-        checkBootRunning(mockContext);
-        this.mockInstanceHolder = new MockInstanceHolder(mockContext);
+        this.mockInstanceContext = new MockInstanceContext(httpTest);
+        this.reason = mockInstanceContext.checkBootRunning();
     }
 
-    private void checkBootRunning(HttpMockContext mockContext) {
-        try (Socket ignored = new Socket(mockContext.getHost(), mockContext.getPort())) {
-        } catch (IOException ioException) {
-            this.reason = "connect fail -> " + mockContext.getHost() + ":" + mockContext.getPort();
+    @Override
+    public ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext extensionContext) {
+        if (reason != null) {
+            return ConditionEvaluationResult.disabled(reason + ", disable " + extensionContext.getDisplayName());
         }
+        return ConditionEvaluationResult.enabled(null);
+    }
+
+    @Override
+    public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
+        return mockInstanceContext.getInstance(parameterContext.getParameter().getType());
     }
 
     private void disableLoggin() {
@@ -68,27 +59,20 @@ public class HttpMockExtension implements ParameterResolver, TestInstancePostPro
     }
 
     private void resolveInject(Object o) {
+
         Field[] declaredFields = o.getClass().getDeclaredFields();
         for (Field declaredField : declaredFields) {
             int modifiers = declaredField.getModifiers();
             if (Modifier.isStatic(modifiers) || Modifier.isFinal(modifiers)) {
                 continue;
             }
-            if (declaredField.getDeclaredAnnotation(Autowired.class) != null
-                    || declaredField.getDeclaredAnnotation(Resource.class) != null
-                    || declaredField.getDeclaredAnnotation(Qualifier.class) != null) {
-                declaredField.setAccessible(true);
-                ReflectionUtils.setField(declaredField, o, mockInstanceHolder.getInstance(declaredField.getType()));
+            declaredField.setAccessible(true);
+            Object resolved = mockInstanceContext.resolveField(declaredField);
+            if (resolved != null) {
+                ReflectionUtils.setField(declaredField, o, resolved);
             }
-        }
-    }
 
-    @Override
-    public ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext extensionContext) {
-        if (this.reason != null) {
-            return ConditionEvaluationResult.disabled(this.reason + ", disable " + extensionContext.getDisplayName());
         }
-        return ConditionEvaluationResult.enabled(null);
     }
 
 }

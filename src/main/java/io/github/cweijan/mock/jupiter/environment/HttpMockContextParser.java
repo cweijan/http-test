@@ -14,10 +14,16 @@ import java.util.List;
 public class HttpMockContextParser {
 
     private final List<HttpMockContextReader> httpMockContextReaders = new ArrayList<>();
+    private final BootEnvironmentReader bootEnvironmentReader;
 
     public HttpMockContextParser(HttpTest httpTest) {
         this.httpMockContextReaders.add(new AnnotationReader(httpTest));
-        this.httpMockContextReaders.add(new BootEnvironmentReader(httpTest));
+        bootEnvironmentReader = new BootEnvironmentReader(httpTest);
+        this.httpMockContextReaders.add(bootEnvironmentReader);
+    }
+
+    public BootEnvironmentReader getBootEnvironmentReader() {
+        return bootEnvironmentReader;
     }
 
     public HttpMockContext parse() {

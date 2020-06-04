@@ -6,6 +6,7 @@ import io.github.cweijan.mock.boot.pojo.User;
 import io.github.cweijan.mock.jupiter.HttpTest;
 import io.github.cweijan.mock.request.Generator;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Value;
 
 import javax.annotation.Resource;
 
@@ -18,6 +19,9 @@ public class UserControllerTest {
 
     @Resource
     private UserMockController userController;
+
+    @Value("${server.port}")
+    private Integer port;
 
     @Test
     void saveUser() {

@@ -1,7 +1,9 @@
 package io.github.cweijan.mock.jupiter;
 
 import ch.qos.logback.classic.LoggerContext;
+import io.github.cweijan.mock.context.HttpMockContext;
 import io.github.cweijan.mock.jupiter.environment.HttpMockContextParser;
+import io.github.cweijan.mock.jupiter.exception.ConnectSpringBootException;
 import org.junit.jupiter.api.extension.*;
 import org.slf4j.ILoggerFactory;
 import org.slf4j.LoggerFactory;
@@ -12,8 +14,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.util.ReflectionUtils;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.net.Socket;
 
 /**
  * @author cweijan
@@ -44,8 +48,17 @@ public class HttpMockExtension implements ParameterResolver, TestInstancePostPro
 
     private void initContext(Object testInstance) {
         HttpTest httpTest = testInstance.getClass().getAnnotation(HttpTest.class);
-        HttpMockContextParser contextParser = new HttpMockContextParser(httpTest);
-        this.mockInstanceHolder = new MockInstanceHolder(contextParser.parse());
+        HttpMockContext mockContext = new HttpMockContextParser(httpTest).parse();
+        checkBootRunning(mockContext);
+        this.mockInstanceHolder = new MockInstanceHolder(mockContext);
+    }
+
+    private boolean checkBootRunning(HttpMockContext mockContext) {
+        try (Socket ignored = new Socket(mockContext.getHost(),  mockContext.getPort())) {
+            return true;
+        } catch (IOException ioException) {
+            throw new ConnectSpringBootException(mockContext.getHost(),mockContext.getPort(),ioException);
+        }
     }
 
     private void disableLoggin() {

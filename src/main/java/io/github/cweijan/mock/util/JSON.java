@@ -4,21 +4,19 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonParser.Feature;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.DateSerializer;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
+import io.github.cweijan.mock.feign.jackson.deserializer.LocalDateExtDeserializer;
+import io.github.cweijan.mock.feign.jackson.deserializer.LocalDateTimeExtDeserializer;
+import io.github.cweijan.mock.feign.jackson.serializer.LocalDateExtSerializer;
+import io.github.cweijan.mock.feign.jackson.serializer.LocalDateTimeExtSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -28,6 +26,9 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * @author cweijan
+ */
 public abstract class JSON {
     private static final ObjectMapper mapper;
     private static final ObjectMapper withEmptyMapper;
@@ -41,14 +42,14 @@ public abstract class JSON {
         //datetime parse
         dateModule = new SimpleModule();
         //配置序列化
-        dateModule.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-        dateModule.addSerializer(LocalDate.class, new LocalDateSerializer(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
         dateModule.addSerializer(LocalTime.class, new LocalTimeSerializer(DateTimeFormatter.ofPattern("HH:mm:ss")));
+        dateModule.addSerializer(LocalDate.class, new LocalDateExtSerializer(false));
+        dateModule.addSerializer(LocalDateTime.class, new LocalDateTimeExtSerializer(false));
         dateModule.addSerializer(Date.class, new DateSerializer(false, new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")));
         //配置反序列化
-        dateModule.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-        dateModule.addDeserializer(LocalDate.class, new LocalDateDeserializer(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
         dateModule.addDeserializer(LocalTime.class, new LocalTimeDeserializer(DateTimeFormatter.ofPattern("HH:mm:ss")));
+        dateModule.addDeserializer(LocalDate.class, new LocalDateExtDeserializer());
+        dateModule.addDeserializer(LocalDateTime.class, new LocalDateTimeExtDeserializer());
         //without empty
         mapper = new ObjectMapper();
         mapper.setSerializationInclusion(Include.NON_EMPTY);
@@ -74,6 +75,7 @@ public abstract class JSON {
      * 将对象转换成json
      *
      * @param originalObject 要转换的对象
+     * @return json字符串
      */
     public static String toJSON(Object originalObject) {
 
@@ -91,9 +93,10 @@ public abstract class JSON {
     }
 
     /**
-     * 将对象转换成json
+     * 将对象转换成json字节流数组
      *
      * @param originalObject 要转换的对象
+     * @return 字节流数组
      */
     public static byte[] toJsonByte(Object originalObject) {
 
@@ -114,6 +117,7 @@ public abstract class JSON {
      * 将对象转换成json,并包含空属性
      *
      * @param originalObject 要转换的对象
+     * @return json字符串
      */
     public static String toJsonWithEmpty(Object originalObject) {
 
@@ -128,34 +132,12 @@ public abstract class JSON {
         return json;
     }
 
-
-    /**
-     * 根据子key获取子json
-     *
-     * @param json json字符串
-     * @param key  json字符串子key
-     * @return 子json
-     */
-    public static String get(String json, String key) {
-
-        if (StringUtils.isEmpty(json) || StringUtils.isEmpty(key)) return null;
-
-        String value;
-        try {
-            value = mapper.readValue(json, JsonNode.class).get(key).textValue();
-        } catch (IOException var5) {
-            logger.info(var5.getMessage());
-            value = null;
-        }
-
-        return value;
-    }
-
     /**
      * 将json转成List
      *
      * @param json      json字符串
      * @param valueType list泛型
+     * @return 对象集合
      */
     public static <T> List<T> parseList(String json, Class<T> valueType) {
 
@@ -167,6 +149,7 @@ public abstract class JSON {
      *
      * @param json      json字符串
      * @param valueType list泛型
+     * @return 对象集合
      */
     public static <T, E extends Collection> Collection<T> parseCollection(String json, Class<E> collectionClass, Class<T> valueType) {
 
@@ -187,6 +170,8 @@ public abstract class JSON {
 
     /**
      * 将json转成指定的类对象
+     * @param json json字符串
+     * @param type 要转换的目标类型
      */
     @SuppressWarnings("unchecked")
     public static <T> T parse(String json, Class<T> type) {

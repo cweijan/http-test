@@ -62,7 +62,7 @@ public class BootEnvironmentReader extends ConfigFileApplicationListener impleme
     @Override
     public Integer getPort() {
         String property = environment.getProperty("server.port");
-        if (property == null) return 8080;
+        if (property == null) return null;
         return Integer.parseInt(property);
     }
 

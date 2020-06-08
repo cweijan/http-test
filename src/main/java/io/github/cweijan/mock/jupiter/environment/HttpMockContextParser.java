@@ -44,6 +44,7 @@ public class HttpMockContextParser {
             }
             if (port == null || port == 0) {
                 port = httpMockContextReader.getPort();
+                if (port == null) port = 8080;
             }
         }
 

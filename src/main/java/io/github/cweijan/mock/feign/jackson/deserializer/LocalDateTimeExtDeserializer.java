@@ -13,12 +13,13 @@ import java.time.format.DateTimeFormatter;
 
 /**
  * 扩展jackson反序列, 使其支持时间戳转LocalDateTime
+ *
  * @author cweijan
  * @since 2020/05/21 9:51
  */
 public class LocalDateTimeExtDeserializer extends LocalDateTimeDeserializer {
-    public LocalDateTimeExtDeserializer() {
-        super(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+    public LocalDateTimeExtDeserializer(String pattern) {
+        super(DateTimeFormatter.ofPattern(pattern));
     }
 
     public LocalDateTimeExtDeserializer(DateTimeFormatter formatter) {
@@ -31,8 +32,8 @@ public class LocalDateTimeExtDeserializer extends LocalDateTimeDeserializer {
     }
 
     @Override
-    public LocalDateTime deserialize(JsonParser parse, DeserializationContext context) throws IOException{
-        if(parse.hasToken(JsonToken.VALUE_NUMBER_INT)){
+    public LocalDateTime deserialize(JsonParser parse, DeserializationContext context) throws IOException {
+        if (parse.hasToken(JsonToken.VALUE_NUMBER_INT)) {
             return LocalDateTime.ofInstant(Instant.ofEpochMilli(parse.getLongValue()), ZoneId.systemDefault());
         }
         return super.deserialize(parse, context);

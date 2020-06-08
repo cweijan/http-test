@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.DateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
+import io.github.cweijan.mock.feign.config.DateConfig;
 import io.github.cweijan.mock.feign.jackson.deserializer.LocalDateExtDeserializer;
 import io.github.cweijan.mock.feign.jackson.deserializer.LocalDateTimeExtDeserializer;
 import io.github.cweijan.mock.feign.jackson.serializer.LocalDateExtSerializer;
@@ -30,26 +31,23 @@ import java.util.List;
  * @author cweijan
  */
 public abstract class JSON {
-    private static final ObjectMapper mapper;
-    private static final ObjectMapper withEmptyMapper;
-    private static final SimpleModule dateModule;
+    private static ObjectMapper mapper;
+    private static ObjectMapper withEmptyMapper;
+    private static SimpleModule dateModule;
     private static final Logger logger = LoggerFactory.getLogger(JSON.class);
 
-    private JSON() {
-    }
-
-    static {
+    public static void init(String pattern) {
         //datetime parse
         dateModule = new SimpleModule();
         //配置序列化
         dateModule.addSerializer(LocalTime.class, new LocalTimeSerializer(DateTimeFormatter.ofPattern("HH:mm:ss")));
         dateModule.addSerializer(LocalDate.class, new LocalDateExtSerializer(false));
-        dateModule.addSerializer(LocalDateTime.class, new LocalDateTimeExtSerializer(false));
-        dateModule.addSerializer(Date.class, new DateSerializer(false, new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")));
+        dateModule.addSerializer(LocalDateTime.class, new LocalDateTimeExtSerializer(false, pattern));
+        dateModule.addSerializer(Date.class, new DateSerializer(false, new SimpleDateFormat(pattern)));
         //配置反序列化
         dateModule.addDeserializer(LocalTime.class, new LocalTimeDeserializer(DateTimeFormatter.ofPattern("HH:mm:ss")));
         dateModule.addDeserializer(LocalDate.class, new LocalDateExtDeserializer());
-        dateModule.addDeserializer(LocalDateTime.class, new LocalDateTimeExtDeserializer());
+        dateModule.addDeserializer(LocalDateTime.class, new LocalDateTimeExtDeserializer(pattern));
         //without empty
         mapper = new ObjectMapper();
         mapper.setSerializationInclusion(Include.NON_EMPTY);
@@ -170,6 +168,7 @@ public abstract class JSON {
 
     /**
      * 将json转成指定的类对象
+     *
      * @param json json字符串
      * @param type 要转换的目标类型
      */

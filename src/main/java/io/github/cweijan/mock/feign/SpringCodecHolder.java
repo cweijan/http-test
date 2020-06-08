@@ -3,6 +3,7 @@ package io.github.cweijan.mock.feign;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.codec.Decoder;
 import feign.codec.Encoder;
+import io.github.cweijan.mock.feign.config.DateConfig;
 import io.github.cweijan.mock.util.JSON;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
@@ -14,10 +15,13 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.ResourceHttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.http.converter.support.AllEncompassingFormHttpMessageConverter;
 import org.springframework.http.converter.xml.Jaxb2RootElementHttpMessageConverter;
 import org.springframework.http.converter.xml.SourceHttpMessageConverter;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @author cweijan
@@ -25,20 +29,21 @@ import java.util.LinkedList;
  */
 public class SpringCodecHolder {
 
-    private static final LinkedList<HttpMessageConverter<?>> httpMessageConverters;
-    private static final ObjectFactory<HttpMessageConverters> httpMessageConvertersObjectFactory;
+    private static  LinkedList<HttpMessageConverter<?>> httpMessageConverters;
+    private static  ObjectFactory<HttpMessageConverters> httpMessageConvertersObjectFactory;
     private static Encoder encoder;
-    private static final Decoder decoder;
+    private static Decoder decoder;
 
-    static {
-        httpMessageConverters = new LinkedList<>();
-        httpMessageConverters.add(new ByteArrayHttpMessageConverter());
-        httpMessageConverters.add(new StringHttpMessageConverter());
-        httpMessageConverters.add(new ResourceHttpMessageConverter());
-        httpMessageConverters.add(new SourceHttpMessageConverter<>());
-        httpMessageConverters.add(initJacksonConverter());
-        httpMessageConverters.add(new Jaxb2RootElementHttpMessageConverter());
-        httpMessageConvertersObjectFactory = () -> new HttpMessageConverters(httpMessageConverters);
+    private static void init() {
+        JSON.init(DateConfig.PATTERN);
+        httpMessageConverters = new LinkedList<>(new RestTemplate().getMessageConverters());
+        for (HttpMessageConverter<?> httpMessageConverter : httpMessageConverters) {
+            if (httpMessageConverter instanceof MappingJackson2HttpMessageConverter) {
+                ((MappingJackson2HttpMessageConverter) httpMessageConverter).getObjectMapper()
+                        .registerModule(JSON.getDateModule());
+            }
+        }
+        httpMessageConvertersObjectFactory = () -> new HttpMessageConverters(false, httpMessageConverters);
         decoder = new SpringDecoder(httpMessageConvertersObjectFactory);
         encoder = new SpringEncoder(httpMessageConvertersObjectFactory);
         try {
@@ -48,7 +53,10 @@ public class SpringCodecHolder {
         }
     }
 
-    public static Encoder getEncoder() {
+    public static synchronized Encoder getEncoder() {
+        if(encoder==null){
+            init();
+        }
         return encoder;
     }
 

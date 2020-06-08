@@ -4,6 +4,7 @@ import feign.RequestInterceptor;
 import io.github.cweijan.mock.context.HttpMockContext;
 import io.github.cweijan.mock.feign.FeignMockerContext;
 import io.github.cweijan.mock.feign.SpringCodecHolder;
+import io.github.cweijan.mock.feign.config.DateConfig;
 import org.springframework.http.converter.HttpMessageConverter;
 
 /**
@@ -33,6 +34,14 @@ public class Mocker {
     public static <T> T api(Class<T> controllerClass, HttpMockContext context) {
 
         return FeignMockerContext.getFeignClientWrapper(controllerClass, context);
+    }
+
+    /**
+     * 设置日期Date和LocalDateTime的序列化格式, 默认为"yyyy-MM-dd HH:mm:ss"
+     * @param patten 日期格式
+     */
+    public static void configDateFormat(String patten){
+        DateConfig.PATTERN=patten;
     }
 
     /**

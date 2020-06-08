@@ -19,8 +19,8 @@ import java.time.format.DateTimeFormatter;
 public class LocalDateTimeExtSerializer extends LocalDateTimeSerializer {
     private final Boolean writeDatesAsTimestamps;
 
-    public LocalDateTimeExtSerializer(Boolean writeDatesAsTimestamps) {
-        super(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+    public LocalDateTimeExtSerializer(Boolean writeDatesAsTimestamps, String pattern) {
+        super(DateTimeFormatter.ofPattern(pattern));
         this.writeDatesAsTimestamps = writeDatesAsTimestamps;
     }
 

@@ -27,7 +27,9 @@ public class FeignMockerContext {
      * 根据目标controller的方法构造出feign接口
      *
      * @param controllerClass 目标Controlller
-     * @param context
+     * @param context http测试上下文
+     * @param <T> controller
+     * @return feign的包装类, 同时也是controller的代理类
      */
     @SuppressWarnings("unchecked")
     public static <T> T getFeignClientWrapper(Class<T> controllerClass, HttpMockContext context) {

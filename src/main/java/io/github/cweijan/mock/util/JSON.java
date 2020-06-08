@@ -9,7 +9,6 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.DateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
-import io.github.cweijan.mock.feign.config.DateConfig;
 import io.github.cweijan.mock.feign.jackson.deserializer.LocalDateExtDeserializer;
 import io.github.cweijan.mock.feign.jackson.deserializer.LocalDateTimeExtDeserializer;
 import io.github.cweijan.mock.feign.jackson.serializer.LocalDateExtSerializer;
@@ -149,7 +148,7 @@ public abstract class JSON {
      * @param valueType list泛型
      * @return 对象集合
      */
-    public static <T, E extends Collection> Collection<T> parseCollection(String json, Class<E> collectionClass, Class<T> valueType) {
+    public static <T, E extends Collection<?>> Collection<T> parseCollection(String json, Class<E> collectionClass, Class<T> valueType) {
 
         if (StringUtils.isEmpty(json) || valueType == null) return null;
 

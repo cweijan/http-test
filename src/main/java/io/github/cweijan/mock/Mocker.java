@@ -19,6 +19,8 @@ public class Mocker {
      *
      * @param controllerClass 目标controller
      * @param port            springboot应用端口
+     * @param <T>             controller
+     * @return controller的http代理类
      */
     public static <T> T api(Class<T> controllerClass, Integer port) {
         return api(controllerClass, new HttpMockContext("http", "127.0.0.1", port));
@@ -29,7 +31,9 @@ public class Mocker {
      * 调用该方法会创建3个核心对象: feign接口, feign接口代理, controller代理
      *
      * @param controllerClass 目标controller
-     * @param context 目标web应用上下文
+     * @param context         目标web应用上下文
+     * @param <T>             controller
+     * @return controller的http代理类
      */
     public static <T> T api(Class<T> controllerClass, HttpMockContext context) {
 
@@ -38,14 +42,16 @@ public class Mocker {
 
     /**
      * 设置日期Date和LocalDateTime的序列化格式, 默认为"yyyy-MM-dd HH:mm:ss"
+     *
      * @param patten 日期格式
      */
-    public static void configDateFormat(String patten){
-        DateConfig.PATTERN=patten;
+    public static void configDateFormat(String patten) {
+        DateConfig.PATTERN = patten;
     }
 
     /**
      * 增加请求拦截器, 对所有请求生效
+     * @param requestInterceptor 请求拦截器
      */
     public static void addRequestInterceptor(RequestInterceptor requestInterceptor) {
         FeignMockerContext.addInterceptor(requestInterceptor);
@@ -53,9 +59,10 @@ public class Mocker {
 
     /**
      * 增加RequestBody消息转换器(Preview)
+     *
      * @param httpMessageConverter 消息转换器
      */
-    public static void addHttpMesagerConvert(HttpMessageConverter<?> httpMessageConverter){
+    public static void addHttpMesagerConvert(HttpMessageConverter<?> httpMessageConverter) {
         SpringCodecHolder.addHttpMessageConveter(httpMessageConverter);
     }
 

@@ -17,27 +17,30 @@ import java.lang.annotation.*;
 @ExtendWith(HttpMockExtension.class)
 public @interface HttpTest {
     /**
-     * http测试应用host
+     * @return http测试应用host
      */
     String host() default "127.0.0.1";
 
     /**
      * http测试应用端口, 为空则读取spring boot配置文件
+     * @return 测试端口号
      */
     int port() default 0;
 
     /**
-     * http测试协议
+     * @return http测试协议
      */
     String scheme() default "http";
 
     /**
      * http测试上下文地址, 为空则读取spring boot配置文件
+     * @return 项目路径
      */
     String contextPath() default "";
 
     /**
      * 配置springboot的active配置文件, Http相关配置优先级低于注解
+     * @return springboot active配置
      */
     String[] activeProfiles() default {"default"};
 

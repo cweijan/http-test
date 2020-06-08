@@ -13,7 +13,8 @@ public interface FeignInvoke {
      * invoke feign client
      * @param method target method
      * @param args params
-     * @return response
+     * @return feign execute response
+     * @throws Throwable 执行代理方法时跑抛出的任意异常
      */
     Object invoke(Method method, Object[] args) throws Throwable;
 

@@ -115,7 +115,7 @@
 # 常用API
 - Generator: 用于生成mock数据
 - Asserter: 用于对数据进行断言验证
-- Mocker: 用于创建controller代理以及设置拦截器
+- Mocker: 可修改默认设置
 
 # 实现原理
 1. 扫描controller并使用ByteBuddy动态创建feign接口

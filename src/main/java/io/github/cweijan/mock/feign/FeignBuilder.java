@@ -27,6 +27,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.time.temporal.Temporal;
 import java.util.*;
 
@@ -42,7 +44,14 @@ public class FeignBuilder {
     private static final ParameterNameDiscoverer NAME_DISCOVERER = new LocalVariableTableParameterNameDiscoverer();
 
     private static DynamicType.Builder<?> initMethodBuilder(DynamicType.Builder<?> builder, Method method) {
-        DynamicType.Builder.MethodDefinition.ParameterDefinition<?> methodBuild = builder.defineMethod(method.getName(), method.getReturnType(), Visibility.PUBLIC);
+
+        Type genericReturnType = method.getGenericReturnType();
+        DynamicType.Builder.MethodDefinition.ParameterDefinition<?> methodBuild;
+        if (genericReturnType instanceof ParameterizedType) {
+            methodBuild = builder.defineMethod(method.getName(), genericReturnType, Visibility.PUBLIC);
+        } else {
+            methodBuild = builder.defineMethod(method.getName(), method.getReturnType(), Visibility.PUBLIC);
+        }
         boolean isQuery = method.getAnnotation(GetMapping.class) != null || method.getAnnotation(DeleteMapping.class) != null;
         Parameter[] parameters = method.getParameters();
         String[] parameterNames = NAME_DISCOVERER.getParameterNames(method);
@@ -63,6 +72,7 @@ public class FeignBuilder {
 
     /**
      * if class is simple type
+     *
      * @param type parameter type
      * @return return true when is simple
      */
@@ -94,7 +104,7 @@ public class FeignBuilder {
      * create target controller proxy.
      *
      * @param controllerClass target controller
-     * @param feignClient feign client
+     * @param feignClient     feign client
      * @return proxy controller
      */
     static <T> T generateProxy(Class<T> controllerClass, Object feignClient) {
@@ -114,7 +124,7 @@ public class FeignBuilder {
 
         return Feign.builder()
                 .requestInterceptors(REQUEST_INTERCEPTORS)
-                .retryer(new Retryer.Default(100,1,1))
+                .retryer(new Retryer.Default(100, 1, 1))
                 .encoder(SpringCodecHolder.getEncoder())
                 .client(new InspectClient(null, null))
                 .decoder(new OptionalDecoder(new ResponseEntityDecoder(SpringCodecHolder.getDecoder())))
@@ -124,6 +134,7 @@ public class FeignBuilder {
 
     /**
      * check inject class is valid
+     *
      * @param controllerClass inject target class
      */
     private static <T> void validateClass(Class<T> controllerClass) {

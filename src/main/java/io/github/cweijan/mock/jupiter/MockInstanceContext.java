@@ -45,6 +45,7 @@ public class MockInstanceContext {
 
     public String checkBootRunning() {
         try (Socket ignored = new Socket(context.getHost(), context.getPort())) {
+            ignored.isConnected();
         } catch (IOException ioException) {
             return "connect fail -> " + context.getHost() + ":" + context.getPort();
         }

@@ -17,9 +17,9 @@ import java.time.format.DateTimeFormatter;
  * @version 2019/9/5 11:39
  */
 public class LocalDateExtSerializer extends LocalDateSerializer {
-    private final Boolean writeDatesAsTimestamps;
+    private final boolean writeDatesAsTimestamps;
 
-    public LocalDateExtSerializer(Boolean writeDatesAsTimestamps) {
+    public LocalDateExtSerializer(boolean writeDatesAsTimestamps) {
         super(DateTimeFormatter.ISO_LOCAL_DATE);
         this.writeDatesAsTimestamps = writeDatesAsTimestamps;
     }

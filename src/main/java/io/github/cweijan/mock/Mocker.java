@@ -11,7 +11,7 @@ import org.springframework.http.converter.HttpMessageConverter;
  * @author cweijan
  * @since 2020/05/21 17:30
  */
-public class Mocker {
+public abstract class Mocker {
 
     /**
      * 调用controller方法时会发送请求到本地spring boot应用

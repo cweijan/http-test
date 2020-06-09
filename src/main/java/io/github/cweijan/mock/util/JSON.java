@@ -83,7 +83,7 @@ public abstract class JSON {
         try {
             json = mapper.writeValueAsString(originalObject);
         } catch (Exception e) {
-            logger.error("toJson error:", e);
+            throw new RuntimeException(e);
         }
 
         return json;
@@ -103,7 +103,7 @@ public abstract class JSON {
         try {
             json = mapper.writeValueAsBytes(originalObject);
         } catch (Exception e) {
-            logger.error("toJson error:", e);
+            throw new RuntimeException(e);
         }
 
         return json;
@@ -123,7 +123,7 @@ public abstract class JSON {
         try {
             json = withEmptyMapper.writeValueAsString(originalObject);
         } catch (Exception e) {
-            logger.error("toJson error:", e);
+            throw new RuntimeException(e);
         }
 
         return json;
@@ -158,8 +158,7 @@ public abstract class JSON {
         try {
             objectList = mapper.readValue(json, javaType);
         } catch (Exception e) {
-            logger.error("parseList error:" + e.getMessage(), e);
-            objectList = null;
+            throw new RuntimeException(e);
         }
 
         return objectList;
@@ -181,8 +180,7 @@ public abstract class JSON {
         try {
             result = mapper.readValue(json, type);
         } catch (Exception e) {
-            logger.error("parse error:" + e.getMessage(), e);
-            result = null;
+            throw new RuntimeException(e);
         }
 
         return result;

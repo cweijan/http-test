@@ -9,7 +9,7 @@ import org.skyscreamer.jsonassert.JSONAssert;
  * @author cweijan
  * @since 2020/05/25 15:03
  */
-public class Asserter extends Assertions{
+public abstract class Asserter extends Assertions{
 
     /**
      * 对比两个对象的属性是否匹配

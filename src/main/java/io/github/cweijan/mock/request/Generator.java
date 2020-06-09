@@ -23,7 +23,7 @@ import java.util.stream.Stream;
  * @author cweijan
  * @since 2020/05/22 18:10
  */
-public class Generator {
+public abstract class Generator {
 
     private static final Random random = new Random();
     private static final StringGenerator stringGenerator = new ChineseStringGenerator();
@@ -158,8 +158,8 @@ public class Generator {
      */
     public static long randomTimeStamp(int start, int end) {
         LocalDate now = LocalDate.now();
-        long startLong = now.minusDays(start).atStartOfDay(ZoneOffset.systemDefault()).toInstant().toEpochMilli();
-        long endLong = now.plusDays(end).atStartOfDay(ZoneOffset.systemDefault()).toInstant().toEpochMilli();
+        long startLong = now.minusDays(start).atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        long endLong = now.plusDays(end).atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli();
         return ThreadLocalRandom.current().longs(startLong, endLong).findAny().orElseThrow(RuntimeException::new);
     }
 
@@ -265,7 +265,7 @@ public class Generator {
                     return (Class<?>) ((ParameterizedType) tempType).getRawType();
                 }
             }).collect(Collectors.toList());
-            if (classes.size() > 0) {
+            if (!classes.isEmpty()) {
                 return classes.get(0);
             }
             return null;

@@ -28,7 +28,7 @@ public class HttpMockExtension implements ParameterResolver, TestInstancePostPro
     }
 
     @Override
-    public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
+    public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
         return AnnotationUtils.findAnnotation(parameterContext.getParameter().getType(), Controller.class) != null;
     }
 
@@ -47,7 +47,7 @@ public class HttpMockExtension implements ParameterResolver, TestInstancePostPro
     }
 
     @Override
-    public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
+    public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
         return mockInstanceContext.getInstance(parameterContext.getParameter().getType());
     }
 

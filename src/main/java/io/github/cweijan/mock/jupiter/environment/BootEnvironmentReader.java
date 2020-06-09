@@ -18,7 +18,7 @@ public class BootEnvironmentReader extends ConfigFileApplicationListener impleme
 
     private static final String BOOTSTRAP_PROPERTY_SOURCE_NAME = "bootstrap";
 
-    public ConfigurableEnvironment environment;
+    public final ConfigurableEnvironment environment;
 
 
     public BootEnvironmentReader(HttpTest httpTest) {

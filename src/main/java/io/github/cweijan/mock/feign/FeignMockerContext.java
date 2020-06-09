@@ -11,7 +11,7 @@ import java.util.Objects;
  * @author cweijan
  * @since 2020/05/22 15:36
  */
-public class FeignMockerContext {
+public abstract class FeignMockerContext {
 
     private static final Map<Class<?>, Object> PROXY_CACHE = new HashMap<>();
 

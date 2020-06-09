@@ -36,7 +36,7 @@ import java.util.*;
  * @author cweijan
  * @since 2020/05/25 18:08
  */
-public class FeignBuilder {
+public abstract class FeignBuilder {
 
     static final List<RequestInterceptor> REQUEST_INTERCEPTORS = new ArrayList<>();
     private static final UrlParser URL_PARSER = new StandardUrlParser();
@@ -58,10 +58,8 @@ public class FeignBuilder {
         for (int i = 0; i < parameters.length; i++) {
             Parameter parameter = parameters[i];
             DynamicType.Builder.MethodDefinition.ParameterDefinition.Annotatable<?> tempBuilder = methodBuild.withParameter(parameter.getType(), Objects.requireNonNull(parameterNames)[i]).annotateParameter(parameter.getAnnotations());
-            if (isQuery) {
-                if (parameter.getAnnotation(PathVariable.class) == null) {
-                    tempBuilder = tempBuilder.annotateParameter(AnnotationDescription.Builder.ofType(isSimple(parameter.getType()) ? RequestParam.class : SpringQueryMap.class).build());
-                }
+            if (isQuery && parameter.getAnnotation(PathVariable.class) == null) {
+                tempBuilder = tempBuilder.annotateParameter(AnnotationDescription.Builder.ofType(isSimple(parameter.getType()) ? RequestParam.class : SpringQueryMap.class).build());
             }
             methodBuild = tempBuilder;
         }

@@ -58,7 +58,7 @@ sonarqube {
         property "sonar.projectKey", "cweijan_http-test"
         property "sonar.organization", "cweijan"
         property "sonar.host.url", "https://sonarcloud.io"
-        property "sonar.login", System.getenv('SONAR_TOKEN_ULTIMATE')
+        property "sonar.login", getProperty('sonar.token.ultimate')
     }
 }
 

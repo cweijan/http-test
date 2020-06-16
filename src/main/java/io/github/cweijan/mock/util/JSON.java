@@ -6,24 +6,19 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.fasterxml.jackson.databind.ser.std.DateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
 import io.github.cweijan.mock.feign.jackson.deserializer.LocalDateExtDeserializer;
 import io.github.cweijan.mock.feign.jackson.deserializer.LocalDateTimeExtDeserializer;
 import io.github.cweijan.mock.feign.jackson.serializer.LocalDateExtSerializer;
 import io.github.cweijan.mock.feign.jackson.serializer.LocalDateTimeExtSerializer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -33,7 +28,6 @@ public abstract class JSON {
     private static ObjectMapper mapper;
     private static ObjectMapper withEmptyMapper;
     private static SimpleModule dateModule;
-    private static final Logger logger = LoggerFactory.getLogger(JSON.class);
 
     public static void init(String pattern) {
         //datetime parse
@@ -42,7 +36,7 @@ public abstract class JSON {
         dateModule.addSerializer(LocalTime.class, new LocalTimeSerializer(DateTimeFormatter.ofPattern("HH:mm:ss")));
         dateModule.addSerializer(LocalDate.class, new LocalDateExtSerializer(false));
         dateModule.addSerializer(LocalDateTime.class, new LocalDateTimeExtSerializer(false, pattern));
-        dateModule.addSerializer(Date.class, new DateSerializer(false, new SimpleDateFormat(pattern)));
+//        dateModule.addSerializer(Date.class, new DateSerializer(false, new SimpleDateFormat(pattern)));
         //配置反序列化
         dateModule.addDeserializer(LocalTime.class, new LocalTimeDeserializer(DateTimeFormatter.ofPattern("HH:mm:ss")));
         dateModule.addDeserializer(LocalDate.class, new LocalDateExtDeserializer());

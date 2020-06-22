@@ -1,5 +1,7 @@
 package io.github.cweijan.mock.feign;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.Client;
 import feign.Request;
 import feign.Response;
@@ -22,6 +24,7 @@ import java.nio.charset.StandardCharsets;
 public class InspectClient extends Client.Default {
 
     private static final Unsafe unsafe = BeanUtils.instantiateClass(Unsafe.class);
+    private static final ObjectMapper objectMapper = new ObjectMapper();
 
     public InspectClient(SSLSocketFactory sslContextFactory, HostnameVerifier hostnameVerifier) {
         super(sslContextFactory, hostnameVerifier);
@@ -47,7 +50,12 @@ public class InspectClient extends Client.Default {
 
 
         byte[] bytes = StreamUtils.copyToByteArray(body.asInputStream());
-        System.out.println("Response -> " + new String(bytes, StandardCharsets.UTF_8));
+        try {
+            String responseJson = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(objectMapper.readValue(bytes,Object.class));
+            System.out.println("Response -> " + responseJson);
+        } catch (JsonProcessingException e) {
+            System.out.println("Response -> " + new String(bytes, StandardCharsets.UTF_8));
+        }
         System.out.println("-----------------------------------------------------------------------------------------------------------------------");
 
         unsafe.putObject(body,unsafe.objectFieldOffset(field),new ByteArrayInputStream(bytes));

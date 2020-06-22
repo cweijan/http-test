@@ -22,13 +22,13 @@ public class StandardFeignInvoke implements FeignInvoke {
 
     @Override
     public Object invoke(Method method, Object[] args) throws Throwable {
-        System.out.println("Request -> " + method.getName() + " -> " + JSON.toJSON(args));
         Object invoke;
         try {
             Parameter[] parameters = method.getParameters();
             for (int i = 0; i < args.length; i++) {
                 if (args[i] == null) args[i] = Generator.request(parameters[i].getType());
             }
+            System.out.println("Request -> " + method.getName() + " -> " + JSON.toJSON(args));
             Method feignMethod = feignClient.getClass().getMethod(method.getName(), method.getParameterTypes());
             invoke = feignMethod.invoke(feignClient, args);
         } catch (InvocationTargetException e) {

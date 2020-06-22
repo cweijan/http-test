@@ -5,6 +5,7 @@ import io.github.cweijan.mock.context.HttpMockContext;
 import io.github.cweijan.mock.feign.FeignMockerContext;
 import io.github.cweijan.mock.feign.SpringCodecHolder;
 import io.github.cweijan.mock.feign.config.DateConfig;
+import io.github.cweijan.mock.request.Generator;
 import org.springframework.http.converter.HttpMessageConverter;
 
 /**
@@ -64,6 +65,16 @@ public abstract class Mocker {
      */
     public static void addHttpMesagerConvert(HttpMessageConverter<?> httpMessageConverter) {
         SpringCodecHolder.addHttpMessageConveter(httpMessageConverter);
+    }
+
+    /**
+     * 创建虚拟对象并对field随机赋值
+     *
+     * @param mockClass 目标类型
+     * @return 目标实例
+     */
+    public static <T> T mock(Class<T> mockClass){
+        return Generator.request(mockClass);
     }
 
 }

@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.Client;
 import feign.Request;
 import feign.Response;
+import io.github.cweijan.mock.feign.config.InternalConfig;
+import io.github.cweijan.mock.util.JSON;
 import org.springframework.beans.BeanUtils;
 import org.springframework.util.StreamUtils;
 import sun.misc.Unsafe;
@@ -18,6 +20,7 @@ import java.nio.charset.StandardCharsets;
 
 /**
  * Enhance request client, auto output response.
+ *
  * @author cweijan
  * @since 2020/06/02 14:32
  */
@@ -32,7 +35,7 @@ public class InspectClient extends Client.Default {
 
     @Override
     public Response execute(Request request, Request.Options options) throws IOException {
-        System.out.println(request.httpMethod()+" "+request.url());
+        System.out.println(request.httpMethod() + " " + request.url());
         Response response = super.execute(request, options);
         ouputResponse(response);
         return response;
@@ -51,14 +54,14 @@ public class InspectClient extends Client.Default {
 
         byte[] bytes = StreamUtils.copyToByteArray(body.asInputStream());
         try {
-            String responseJson = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(objectMapper.readValue(bytes,Object.class));
+            String responseJson = InternalConfig.PRETTY_RESPONSE ? JSON.printJSON(objectMapper.readValue(bytes, Object.class)) : new String(bytes, StandardCharsets.UTF_8);
             System.out.println("Response -> " + responseJson);
         } catch (JsonProcessingException e) {
             System.out.println("Response -> " + new String(bytes, StandardCharsets.UTF_8));
         }
         System.out.println("-----------------------------------------------------------------------------------------------------------------------");
 
-        unsafe.putObject(body,unsafe.objectFieldOffset(field),new ByteArrayInputStream(bytes));
+        unsafe.putObject(body, unsafe.objectFieldOffset(field), new ByteArrayInputStream(bytes));
 
     }
 }

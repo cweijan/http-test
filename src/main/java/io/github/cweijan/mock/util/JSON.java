@@ -84,6 +84,27 @@ public abstract class JSON {
     }
 
     /**
+     * 将对象转换成pretty json
+     *
+     * @param originalObject 要转换的对象
+     * @return pretty json字符串
+     */
+    public static String printJSON(Object originalObject) {
+
+        if (originalObject == null) return null;
+        if (originalObject instanceof String) return String.valueOf(originalObject);
+
+        String json = null;
+        try {
+            json = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(originalObject);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        return json;
+    }
+
+    /**
      * 将对象转换成json字节流数组
      *
      * @param originalObject 要转换的对象

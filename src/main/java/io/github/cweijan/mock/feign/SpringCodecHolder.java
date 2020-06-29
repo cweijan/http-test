@@ -2,7 +2,7 @@ package io.github.cweijan.mock.feign;
 
 import feign.codec.Decoder;
 import feign.codec.Encoder;
-import io.github.cweijan.mock.feign.config.DateConfig;
+import io.github.cweijan.mock.feign.config.InternalConfig;
 import io.github.cweijan.mock.util.JSON;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
@@ -26,7 +26,7 @@ public abstract class SpringCodecHolder {
     private static Decoder decoder;
 
     private static void init() {
-        JSON.init(DateConfig.PATTERN);
+        JSON.init(InternalConfig.PATTERN);
         httpMessageConverters = new LinkedList<>(new RestTemplate().getMessageConverters());
         for (HttpMessageConverter<?> httpMessageConverter : httpMessageConverters) {
             if (httpMessageConverter instanceof MappingJackson2HttpMessageConverter) {

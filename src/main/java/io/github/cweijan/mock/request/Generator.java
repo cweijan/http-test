@@ -12,6 +12,7 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.math.BigDecimal;
 import java.time.*;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
@@ -212,6 +213,10 @@ public abstract class Generator {
             return new Integer(random.nextInt(256)).byteValue();
         }
 
+        if (targetType == BigDecimal.class) {
+            return BigDecimal.valueOf(random.nextDouble());
+        }
+
         if (Date.class.isAssignableFrom(targetType)) {
             return new Date(randomTimeStamp(4, 3));
         }
@@ -226,11 +231,14 @@ public abstract class Generator {
             return LocalDateTime.ofInstant(Instant.ofEpochMilli(randomTimeStamp(4, 3)), ZoneId.systemDefault()).toLocalTime();
         }
 
-        return null;
+        return request(targetType);
     }
 
     private static Object auto(Field field) {
         Class<?> targetType = field.getType();
+        if(targetType==field.getDeclaringClass()){
+            return null;
+        }
         if (Collection.class.isAssignableFrom(targetType)) {
             Class<?> genericType = getGenericType(field.getGenericType());
             if (genericType == null) {

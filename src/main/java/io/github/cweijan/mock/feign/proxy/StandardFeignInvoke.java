@@ -28,7 +28,7 @@ public class StandardFeignInvoke implements FeignInvoke {
         Object invoke;
         try {
             Parameter[] parameters = method.getParameters();
-            if(Any.get(method)){
+            if(Any.get(Thread.currentThread().getStackTrace()[4].getMethodName())){
                 for (int i = 0; i < args.length; i++) {
                     if (args[i] == null) args[i] = Generator.request(parameters[i].getType());
                 }

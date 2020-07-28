@@ -17,12 +17,11 @@ public class Any {
         methodMap.put(stackTraceElement.getMethodName(), true);
     }
 
-    public static boolean get( Method method) {
+    public static boolean get(String method) {
         Objects.requireNonNull(method);
-        String key=method.getName();
-        boolean usingAny = methodMap.containsKey(key);
+        boolean usingAny = methodMap.containsKey(method);
         if(usingAny){
-            methodMap.remove(key);
+            methodMap.remove(method);
         }
         return usingAny;
     }

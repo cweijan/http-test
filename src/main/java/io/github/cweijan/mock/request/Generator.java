@@ -76,6 +76,7 @@ public abstract class Generator {
 
     /**
      * 生成指定类型set mock
+     *
      * @param targetType 目标类型
      * @return 目标类型set
      */
@@ -85,8 +86,9 @@ public abstract class Generator {
 
     /**
      * 生成指定类型set mock
+     *
      * @param targetType 目标类型
-     * @param length 长度
+     * @param length     长度
      * @return 目标类型set
      */
     public static <T> Set<T> set(Class<T> targetType, int length) {
@@ -114,7 +116,7 @@ public abstract class Generator {
     public static <T> T[] array(Class<T> targetType, int length) {
         T[] tArray = (T[]) Array.newInstance(targetType, length);
         for (int i = 0; i < tArray.length; i++) {
-            tArray[i] =request(targetType);
+            tArray[i] = request(targetType);
         }
         return tArray;
     }
@@ -190,6 +192,9 @@ public abstract class Generator {
         if (targetType == String.class) {
             return chineseWord();
         }
+        if (targetType == Object.class) {
+            return new Object();
+        }
         if (targetType.isEnum()) {
             Object[] enumConstants = targetType.getEnumConstants();
             return enumConstants[range(0, enumConstants.length)];
@@ -236,7 +241,7 @@ public abstract class Generator {
 
     private static Object auto(Field field) {
         Class<?> targetType = field.getType();
-        if(targetType==field.getDeclaringClass()){
+        if (targetType == field.getDeclaringClass()) {
             return null;
         }
         if (Collection.class.isAssignableFrom(targetType)) {

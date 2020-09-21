@@ -27,6 +27,7 @@ import java.util.stream.Stream;
 public abstract class Generator {
 
     private static final Random random = new Random();
+    private static String[] telFirst="134,135,136,137,138,139,150,151,152,157,158,159,130,131,132,155,156,133,153".split(",");
     private static final StringGenerator stringGenerator = new ChineseStringGenerator();
 
     /**
@@ -53,6 +54,20 @@ public abstract class Generator {
         }
         return instance;
     }
+
+
+    /**
+     * 生成随机手机号
+     * @return 手机号字符串
+     */
+    public static String phone() {
+        int index=getNum(0,telFirst.length-1);
+        String first=telFirst[index];
+        String second=String.valueOf(getNum(1,888)+10000).substring(1);
+        String third=String.valueOf(getNum(1,9100)+10000).substring(1);
+        return first+second+third;
+    }
+
 
     /**
      * 创建两个常见中文字符组成的字符串
@@ -238,6 +253,11 @@ public abstract class Generator {
 
         return request(targetType);
     }
+
+    private static int getNum(int start,int end) {
+        return (int)(Math.random()*(end-start+1)+start);
+    }
+
 
     private static Object auto(Field field) {
         Class<?> targetType = field.getType();

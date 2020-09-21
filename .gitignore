@@ -10,4 +10,5 @@ gradle/
 bin/
 .settings
 .project
+gradle.properties
 .classpath

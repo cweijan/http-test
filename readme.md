@@ -13,41 +13,9 @@
 - 从插件仓库[http-test](https://plugins.jetbrains.com/plugin/15316-http-test-support)
 - 直接下载[jar包](https://github.com/cweijan/http-test-idea/releases/download/1.1.1/http-test-idea.jar)安装
 
-2. 假设有以下controller, 启动springboot应用
-    ```java
-    @RestController
-    @RequestMapping("/user")
-    public class UserController {
-    
-        private final UserService userService;
-    
-        public UserController(UserService userService) {
-            this.userService = userService;
-        }
-    
-        @PostMapping("/save")
-        public UserVo saveUser(@RequestBody SaveUserDTO saveuserDTO) {
-            return userService.saveUser(saveuserDTO);
-        }
-    
-        @PostMapping("/update")
-        public UserVo updateUser(@RequestBody UpdateUserDTO updateuserDTO) {
-            return userService.updateUser(updateuserDTO);
-        }
-      
-        @GetMapping("/{userId}")
-        public UserVO getUser(@PathVariable Integer userId) {
-            return userService.getUser(userId);
-        }
-    
-        @DeleteMapping("/{userId}")
-        public void deleteByUserId(@PathVariable Integer userId) {
-            userService.deleteByUserId(userId);
-        }
-    
-    }
-    ```
-3.  在Controller类上面按下alt+enter, 点击**创建Http测试用例**, 首次使用时会自动**安装依赖**
+2. 在SpringMvc的Controller类上面按下alt+enter, 在弹窗的菜单中点击**创建Http测试用例**, 确认后就可生成, 首次使用时会自动**安装依赖**
+
+例子展示: 
 
 ![example](example.gif)
 

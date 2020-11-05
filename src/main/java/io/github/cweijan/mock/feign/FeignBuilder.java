@@ -95,7 +95,8 @@ public abstract class FeignBuilder {
     public static Class<?> generateFeignInterface(Class<?> controllerClass) {
         validateClass(controllerClass);
         DynamicType.Builder<?> builder = new ByteBuddy().makeInterface().merge(Visibility.PUBLIC);
-        for (Method method : controllerClass.getMethods()) {
+        for (Method method : controllerClass.getDeclaredMethods()) {
+            method.setAccessible(true);
             if (AnnotationUtils.findAnnotation(method, RequestMapping.class) != null) {
                 builder = initMethodBuilder(builder, method);
             }

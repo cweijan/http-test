@@ -77,6 +77,8 @@ public abstract class FeignBuilder {
      */
     public static boolean isSimple(Class<?> type) {
         return type.isPrimitive() ||
+                type.isEnum() ||
+                List.class.isAssignableFrom(type) ||
                 Temporal.class.isAssignableFrom(type) ||
                 Date.class.isAssignableFrom(type) ||
                 (type.getPackage() != null && type.getPackage().getName().startsWith("java.lang"));

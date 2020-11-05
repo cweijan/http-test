@@ -2,7 +2,6 @@ package io.github.cweijan.mock.feign.proxy;
 
 
 import io.github.cweijan.mock.feign.config.InternalConfig;
-import io.github.cweijan.mock.request.Any;
 import io.github.cweijan.mock.request.Generator;
 import io.github.cweijan.mock.util.JSON;
 
@@ -27,12 +26,6 @@ public class StandardFeignInvoke implements FeignInvoke {
     public Object invoke(Method method, Object[] args) throws Throwable {
         Object invoke;
         try {
-            Parameter[] parameters = method.getParameters();
-            if(Any.get(Thread.currentThread().getStackTrace()[4].getMethodName())){
-                for (int i = 0; i < args.length; i++) {
-                    if (args[i] == null) args[i] = Generator.request(parameters[i].getType());
-                }
-            }
             Object param=args.length==1?args[0]:args;
             System.out.println("Request -> " + method.getName() + " -> " +
                     (InternalConfig.PRETTY_REQUEST?JSON.printJSON(param):JSON.toJSON(param)));

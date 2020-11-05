@@ -4,7 +4,6 @@ import feign.RequestInterceptor;
 import io.github.cweijan.mock.context.HttpMockContext;
 import io.github.cweijan.mock.feign.FeignMockerContext;
 import io.github.cweijan.mock.feign.SpringCodecHolder;
-import io.github.cweijan.mock.request.Any;
 import io.github.cweijan.mock.request.Generator;
 import org.springframework.http.converter.HttpMessageConverter;
 
@@ -66,16 +65,6 @@ public abstract class Mocker {
      */
     public static <T> T mock(Class<T> mockClass){
         return Generator.request(mockClass);
-    }
-
-    /**
-     * 标记需要产生随机对象
-     * @param <T> 任意对象
-     * @return null
-     */
-    public static <T> T any(){
-        Any.put(Thread.currentThread().getStackTrace()[2]);
-        return null;
     }
 
 }

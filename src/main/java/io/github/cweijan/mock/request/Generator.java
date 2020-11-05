@@ -30,6 +30,10 @@ public abstract class Generator {
     private static String[] telFirst="134,135,136,137,138,139,150,151,152,157,158,159,130,131,132,155,156,133,153".split(",");
     private static final StringGenerator stringGenerator = new ChineseStringGenerator();
 
+    public static <T> T request(Class<T> paramClass) throws BeanInstantiationException {
+        return any(paramClass);
+    }
+
     /**
      * 创建虚拟对象并对field随机赋值
      *
@@ -38,7 +42,7 @@ public abstract class Generator {
      * @throws BeanInstantiationException 当不存在无参构造方法时
      */
     @SuppressWarnings("unchecked")
-    public static <T> T request(Class<T> paramClass) throws BeanInstantiationException {
+    public static <T> T any(Class<T> paramClass) throws BeanInstantiationException {
 
         if (FeignBuilder.isSimple(paramClass)) {
             return (T) auto(paramClass);
@@ -204,6 +208,9 @@ public abstract class Generator {
     @Nullable
     public static Object auto(Class<?> targetType) {
 
+        if(List.class.isAssignableFrom(targetType)){
+            return Collections.emptyList();
+        }
         if (targetType == String.class) {
             return chineseWord();
         }

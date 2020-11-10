@@ -17,7 +17,7 @@
 
 例子展示: 
 
-![example](example.gif)
+![example](https://cweijan-cloud.oss-cn-beijing.aliyuncs.com/example.gif)
 
 # 常用API
 - Generator: 用于生成mock数据

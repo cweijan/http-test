@@ -55,9 +55,9 @@ public class InspectClient extends Client.Default {
         byte[] bytes = StreamUtils.copyToByteArray(body.asInputStream());
         try {
             String responseJson = InternalConfig.PRETTY_RESPONSE ? JSON.printJSON(objectMapper.readValue(bytes, Object.class)) : new String(bytes, StandardCharsets.UTF_8);
-            System.out.println("Response -> " + responseJson);
+            System.out.println("Response -> \n" + responseJson);
         } catch (JsonProcessingException e) {
-            System.out.println("Response -> " + new String(bytes, StandardCharsets.UTF_8));
+            System.out.println("Response -> \n" + new String(bytes, StandardCharsets.UTF_8));
         }
         System.out.println("-----------------------------------------------------------------------------------------------------------------------");
 

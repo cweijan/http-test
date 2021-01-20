@@ -26,8 +26,8 @@ import java.util.List;
  * @author cweijan
  */
 public abstract class JSON {
-    private static ObjectMapper mapper;
-    private static ObjectMapper withEmptyMapper;
+    private static ObjectMapper mapper = new ObjectMapper();
+    private static ObjectMapper withEmptyMapper = new ObjectMapper();
     private static SimpleModule dateModule;
 
     public static void init(String pattern) {
@@ -43,11 +43,9 @@ public abstract class JSON {
         dateModule.addDeserializer(LocalDate.class, new LocalDateExtDeserializer());
         dateModule.addDeserializer(LocalDateTime.class, new LocalDateTimeExtDeserializer(pattern));
         //without empty
-        mapper = new ObjectMapper();
         mapper.setSerializationInclusion(Include.NON_EMPTY);
         buldCommonMapper(mapper);
         //within empty
-        withEmptyMapper = new ObjectMapper();
         withEmptyMapper.setSerializationInclusion(Include.ALWAYS);
         buldCommonMapper(withEmptyMapper);
     }

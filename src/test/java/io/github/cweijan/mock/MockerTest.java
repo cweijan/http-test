@@ -1,11 +1,8 @@
 package io.github.cweijan.mock;
 
+import io.github.cweijan.mock.util.JSON;
 import org.junit.jupiter.api.Test;
 
-import static io.github.cweijan.mock.Asserter.*;
-import static io.github.cweijan.mock.Mocker.*;
-
-import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDate;
@@ -37,6 +34,11 @@ class MockerTest {
         System.out.println(Mocker.mock(LocalDate.class));
         System.out.println(Mocker.mock(LocalDateTime.class));
         System.out.println(Mocker.mock(LocalTime.class));
+        System.out.println(JSON.toJSON(Mocker.mock(int[].class)));
+        System.out.println(JSON.toJSON(Mocker.mock(Long[].class)));
+        System.out.println(JSON.toJSON(Mocker.mock(BigDecimal[].class)));
+        System.out.println(JSON.toJSON(Mocker.mock(Integer[].class)));
+        System.out.println(JSON.toJSON(Mocker.mock(LocalTime[].class)));
     }
 
 }

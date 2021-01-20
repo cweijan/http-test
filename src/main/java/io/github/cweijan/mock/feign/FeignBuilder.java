@@ -80,6 +80,7 @@ public abstract class FeignBuilder {
     public static boolean isSimple(Class<?> type) {
         return type.isPrimitive() ||
                 type.isEnum() ||
+                type.isArray() ||
                 List.class.isAssignableFrom(type) ||
                 Map.class.isAssignableFrom(type) ||
                 Set.class.isAssignableFrom(type) ||

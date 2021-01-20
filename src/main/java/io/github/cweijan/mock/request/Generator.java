@@ -135,6 +135,10 @@ public abstract class Generator {
      */
     @SuppressWarnings("unchecked")
     public static <T> T[] array(Class<T> targetType, int length) {
+        // not support primitive array
+        if (targetType.isPrimitive()) {
+            return null;
+        }
         T[] tArray = (T[]) Array.newInstance(targetType, length);
         for (int i = 0; i < tArray.length; i++) {
             tArray[i] = any(targetType);
@@ -219,6 +223,9 @@ public abstract class Generator {
         if (Set.class.isAssignableFrom(targetType)) {
             return new HashSet<>();
         }
+        if (targetType.isArray()) {
+            return array(targetType.getComponentType());
+        }
         if (targetType == String.class) {
             return chineseWord();
         }
@@ -278,8 +285,8 @@ public abstract class Generator {
             return LocalDateTime.ofInstant(Instant.ofEpochMilli(randomTimeStamp(4, 3)), ZoneId.systemDefault()).toLocalTime();
         }
 
-        if(FeignBuilder.isSimple(targetType)){
-            throw new UnsupportedOperationException("不支持的类型"+targetType+"!");
+        if (FeignBuilder.isSimple(targetType)) {
+            throw new UnsupportedOperationException("不支持的类型" + targetType + "!");
         }
 
         return any(targetType);
@@ -299,6 +306,9 @@ public abstract class Generator {
             Class<?> genericType = getGenericType(field.getGenericType());
             if (genericType == null) {
                 genericType = Object.class;
+            }
+            if (targetType.isArray()) {
+                return array(genericType);
             }
             if (List.class.isAssignableFrom(targetType)) {
                 return list(genericType);

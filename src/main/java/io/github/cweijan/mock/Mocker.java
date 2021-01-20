@@ -64,7 +64,7 @@ public abstract class Mocker {
      * @return 目标实例
      */
     public static <T> T mock(Class<T> mockClass){
-        return Generator.request(mockClass);
+        return Generator.any(mockClass);
     }
 
 }

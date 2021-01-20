@@ -113,7 +113,7 @@ public abstract class Generator {
      * @return 目标类型set
      */
     public static <T> Set<T> set(Class<T> targetType, int length) {
-        Stream<T> objStream = IntStream.range(0, length).mapToObj(operand -> request(targetType));
+        Stream<T> objStream = IntStream.range(0, length).mapToObj(operand -> any(targetType));
         return objStream.collect(Collectors.toSet());
     }
 
@@ -137,7 +137,7 @@ public abstract class Generator {
     public static <T> T[] array(Class<T> targetType, int length) {
         T[] tArray = (T[]) Array.newInstance(targetType, length);
         for (int i = 0; i < tArray.length; i++) {
-            tArray[i] = request(targetType);
+            tArray[i] = any(targetType);
         }
         return tArray;
     }
@@ -160,7 +160,7 @@ public abstract class Generator {
      * @return 目标类型list
      */
     public static <T> List<T> list(Class<T> targetType, int length) {
-        Stream<T> objStream = IntStream.range(0, length).mapToObj(operand -> request(targetType));
+        Stream<T> objStream = IntStream.range(0, length).mapToObj(operand -> any(targetType));
         return objStream.collect(Collectors.toList());
     }
 
@@ -245,7 +245,11 @@ public abstract class Generator {
             return Math.abs(random.nextLong());
         }
         if (targetType == Short.class || targetType == short.class) {
-            return Math.abs(random.nextInt());
+            return range(0, 1024);
+        }
+
+        if (targetType == Character.class || targetType == char.class) {
+            return range(0, 1024);
         }
 
         if (targetType == Byte.class || targetType == byte.class) {
@@ -274,7 +278,11 @@ public abstract class Generator {
             return LocalDateTime.ofInstant(Instant.ofEpochMilli(randomTimeStamp(4, 3)), ZoneId.systemDefault()).toLocalTime();
         }
 
-        return request(targetType);
+        if(FeignBuilder.isSimple(targetType)){
+            throw new UnsupportedOperationException("不支持的类型"+targetType+"!");
+        }
+
+        return any(targetType);
     }
 
     private static int getNum(int start, int end) {

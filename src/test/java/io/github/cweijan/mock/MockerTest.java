@@ -30,6 +30,8 @@ class MockerTest {
         System.out.println(Mocker.mock(Date.class));
         System.out.println(Mocker.mock(Short.class));
         System.out.println(Mocker.mock(short.class));
+        System.out.println(Mocker.mock(Character.class));
+        System.out.println(Mocker.mock(char.class));
         System.out.println(Mocker.mock(BigDecimal.class));
         System.out.println(Mocker.mock(BigInteger.class));
         System.out.println(Mocker.mock(LocalDate.class));

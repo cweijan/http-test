@@ -153,7 +153,7 @@ public class UserControllerTest {
     @Test
     void saveUser() {
 
-        User user = Generator.request(User.class);
+        User user = Generator.any(User.class);
         Integer userId = user.getId();
         userController.saveUser(user);
 

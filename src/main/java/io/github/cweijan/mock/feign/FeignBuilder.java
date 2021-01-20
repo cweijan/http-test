@@ -29,6 +29,8 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.time.temporal.Temporal;
 import java.util.*;
 
@@ -81,6 +83,8 @@ public abstract class FeignBuilder {
                 List.class.isAssignableFrom(type) ||
                 Map.class.isAssignableFrom(type) ||
                 Set.class.isAssignableFrom(type) ||
+                type== BigDecimal.class ||
+                type== BigInteger.class ||
                 Temporal.class.isAssignableFrom(type) ||
                 Date.class.isAssignableFrom(type) ||
                 (type.getPackage() != null && type.getPackage().getName().startsWith("java.lang"));

@@ -13,6 +13,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.time.*;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
@@ -253,6 +254,10 @@ public abstract class Generator {
 
         if (targetType == BigDecimal.class) {
             return BigDecimal.valueOf(random.nextDouble());
+        }
+
+        if (targetType == BigInteger.class) {
+            return BigInteger.valueOf(random.nextInt());
         }
 
         if (Date.class.isAssignableFrom(targetType)) {

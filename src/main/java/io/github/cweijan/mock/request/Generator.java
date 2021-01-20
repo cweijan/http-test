@@ -243,6 +243,10 @@ public abstract class Generator {
         if (targetType == Long.class || targetType == long.class) {
             return Math.abs(random.nextLong());
         }
+        if (targetType == Short.class || targetType == short.class) {
+            return Math.abs(random.nextInt());
+        }
+
         if (targetType == Byte.class || targetType == byte.class) {
             return new Integer(random.nextInt(256)).byteValue();
         }

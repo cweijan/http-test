@@ -3,13 +3,23 @@
 该项目用于帮助Java开发人员快速测试SpringMvc接口
 
 # 快速开始
+
 1. 安装IDEA插件
 - 从插件仓库[http-test](https://plugins.jetbrains.com/plugin/15375-http-test-support)
 - 直接下载[jar包](https://github.com/cweijan/http-test-idea/releases/download/1.2.1/Http-Test-IDEA.jar)安装
 
-2. 在SpringMvc的Controller类上面按下alt+enter, 在弹窗的菜单中点击**创建Http测试用例**, 确认后就可生成, 首次使用时会自动**安装依赖**
+2. 增加maven依赖
+```xml
+<dependency>
+    <groupId>io.github.cweijan</groupId>
+    <artifactId>http-test</artifactId>
+    <version>0.0.9</version>
+</dependency>
+```
 
-例子展示: 
+3. 在SpringMvc的Controller类上面按下alt+enter, 在弹窗的菜单中点击**创建Http测试用例**
+
+演示: 
 
 ![example](example.gif)
 

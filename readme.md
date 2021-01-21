@@ -28,7 +28,7 @@
 
 1. 在生成测试用例的弹窗中勾选beforeRequest
 ![header](header.png)
-2. 之后便可在一下代码中自行添加请求头.
+2. 之后便可在以下代码中自行添加请求头.
 ![beforeRequest](beforeRequest.png)
 
 

@@ -14,6 +14,7 @@
     <groupId>io.github.cweijan</groupId>
     <artifactId>http-test</artifactId>
     <version>1.0.0</version>
+    <scope>test</scope>
 </dependency>
 ```
 

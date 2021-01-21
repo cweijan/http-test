@@ -24,6 +24,14 @@
 
 ![example](example.gif)
 
+# 增加请求头
+
+1. 在生成测试用例的弹窗中勾选beforeRequest
+![header](header.png)
+2. 之后便可在一下代码中自行添加请求头.
+![beforeRequest](beforeRequest.png)
+
+
 # 常用API
 - Generator: 用于生成mock数据
 - Asserter: 用于对数据进行断言验证

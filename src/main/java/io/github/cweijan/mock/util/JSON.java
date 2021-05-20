@@ -149,6 +149,7 @@ public abstract class JSON {
      *
      * @param json      json字符串
      * @param valueType list泛型
+     * @param <T>       要解析的类型
      * @return 对象集合
      */
     public static <T> List<T> parseList(String json, Class<T> valueType) {
@@ -161,6 +162,8 @@ public abstract class JSON {
      *
      * @param json      json字符串
      * @param valueType list泛型
+     * @param <E>       集合类型
+     * @param <T>       集合内的类型
      * @return 对象集合
      */
     public static <T, E extends Collection<?>> Collection<T> parseCollection(String json, Class<E> collectionClass, Class<T> valueType) {
@@ -184,6 +187,8 @@ public abstract class JSON {
      *
      * @param json json字符串
      * @param type 要转换的目标类型
+     * @param <T>  要解析的类型
+     * @return 从json反序列的对象
      */
     @SuppressWarnings("unchecked")
     public static <T> T parse(String json, Class<T> type) {

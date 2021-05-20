@@ -85,7 +85,6 @@ public @interface FeignClient {
 	 * <code>@Bean</code> definition for the pieces that make up the client, for instance
 	 * {@link feign.codec.Decoder}, {@link feign.codec.Encoder}, {@link feign.Contract}.
 	 *
-	 * @see FeignClientsConfiguration for the defaults
 	 * @return list of configurations for feign client
 	 */
 	Class<?>[] configuration() default {};
@@ -102,7 +101,6 @@ public @interface FeignClient {
 	 * factory must produce instances of fallback classes that implement the interface
 	 * annotated by {@link FeignClient}. The fallback factory must be a valid spring bean.
 	 *
-	 * @see feign.hystrix.FallbackFactory for details.
 	 * @return fallback factory for the specified Feign client interface
 	 */
 	Class<?> fallbackFactory() default void.class;

@@ -42,6 +42,7 @@ public abstract class Mocker {
 
     /**
      * 增加请求拦截器, 对所有请求生效
+     *
      * @param requestInterceptor 请求拦截器
      */
     public static void addRequestInterceptor(RequestInterceptor requestInterceptor) {
@@ -60,10 +61,11 @@ public abstract class Mocker {
     /**
      * 创建虚拟对象并对field随机赋值
      *
+     * @param <T>       要解析的类型
      * @param mockClass 目标类型
      * @return 目标实例
      */
-    public static <T> T mock(Class<T> mockClass){
+    public static <T> T mock(Class<T> mockClass) {
         return Generator.any(mockClass);
     }
 

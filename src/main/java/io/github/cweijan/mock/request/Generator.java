@@ -38,6 +38,7 @@ public abstract class Generator {
     /**
      * 创建虚拟对象并对field随机赋值
      *
+     * @param <T>        要解析的类型
      * @param paramClass 目标类型
      * @return 目标实例
      * @throws BeanInstantiationException 当不存在无参构造方法时
@@ -99,6 +100,7 @@ public abstract class Generator {
      * 生成指定类型set mock
      *
      * @param targetType 目标类型
+     * @param <T>        要解析的类型
      * @return 目标类型set
      */
     public static <T> Set<T> set(Class<T> targetType) {
@@ -110,6 +112,7 @@ public abstract class Generator {
      *
      * @param targetType 目标类型
      * @param length     长度
+     * @param <T>        要解析的类型
      * @return 目标类型set
      */
     public static <T> Set<T> set(Class<T> targetType, int length) {
@@ -121,6 +124,7 @@ public abstract class Generator {
      * 生成指定类型数组mock
      *
      * @param targetType 目标类型
+     * @param <T>        要解析的类型
      * @return 目标类型数组
      */
     public static <T> T[] array(Class<T> targetType) {
@@ -131,6 +135,7 @@ public abstract class Generator {
      * 生成指定类型数组mock
      *
      * @param targetType 目标类型
+     * @param <T>        要解析的类型
      * @param length     数组长度
      */
     @SuppressWarnings("unchecked")
@@ -149,6 +154,7 @@ public abstract class Generator {
     /**
      * 生成指定类型list mock
      *
+     * @param <T>        要解析的类型
      * @param targetType 目标类型
      * @return 目标类型list
      */
@@ -161,6 +167,7 @@ public abstract class Generator {
      *
      * @param targetType 目标类型
      * @param length     list长度
+     * @param <T>        要解析的类型
      * @return 目标类型list
      */
     public static <T> List<T> list(Class<T> targetType, int length) {

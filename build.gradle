@@ -14,7 +14,7 @@ group 'io.github.cweijan'
 version '1.0.0'
 
 repositories {
-    mavenLocal()
+//    mavenLocal()
     maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
     mavenCentral()
 }
@@ -28,9 +28,9 @@ dependencies {
     compile group: 'net.bytebuddy', name: 'byte-buddy', version: '1.10.8'
 
     compile group: 'io.github.openfeign', name: 'feign-core', version: '10.7.4'
-    compile group: 'org.springframework.cloud', name: 'spring-cloud-openfeign-core', version: '2.2.2.RELEASE'
+    compile group: 'io.github.openfeign.form', name: 'feign-form-spring', version: '3.8.0'
 
-    testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.3.0.RELEASE'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.3.0.RELEASE'
 
 }
 

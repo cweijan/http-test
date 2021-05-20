@@ -3,21 +3,19 @@ package io.github.cweijan.mock.feign;
 import feign.Feign;
 import feign.RequestInterceptor;
 import feign.Retryer;
-import feign.optionals.OptionalDecoder;
 import io.github.cweijan.mock.context.HttpMockContext;
 import io.github.cweijan.mock.feign.parse.StandardUrlParser;
 import io.github.cweijan.mock.feign.parse.UrlParser;
 import io.github.cweijan.mock.feign.proxy.CglibClient;
 import io.github.cweijan.mock.feign.proxy.FeignClientWrapper;
 import io.github.cweijan.mock.feign.proxy.StandardFeignInvoke;
+import io.github.cweijan.mock.openfeign.SpringQueryMap;
+import io.github.cweijan.mock.openfeign.support.SpringMvcContract;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.description.annotation.AnnotationDescription;
 import net.bytebuddy.description.modifier.Visibility;
 import net.bytebuddy.dynamic.DynamicType;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.cloud.openfeign.SpringQueryMap;
-import org.springframework.cloud.openfeign.support.ResponseEntityDecoder;
-import org.springframework.cloud.openfeign.support.SpringMvcContract;
 import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
 import org.springframework.core.ParameterNameDiscoverer;
 import org.springframework.core.annotation.AnnotationUtils;
@@ -136,7 +134,7 @@ public abstract class FeignBuilder {
                 .retryer(new Retryer.Default(100, 1, 1))
                 .encoder(SpringCodecHolder.getEncoder())
                 .client(new InspectClient(null, null))
-                .decoder(new OptionalDecoder(new ResponseEntityDecoder(SpringCodecHolder.getDecoder())))
+                .decoder(SpringCodecHolder.getDecoder())
                 .contract(new SpringMvcContract(Collections.emptyList(), new DefaultFormattingConversionService()))
                 .target(feignInterface, url);
     }

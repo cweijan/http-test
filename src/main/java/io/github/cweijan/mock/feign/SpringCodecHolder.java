@@ -2,13 +2,15 @@ package io.github.cweijan.mock.feign;
 
 import feign.codec.Decoder;
 import feign.codec.Encoder;
+import feign.optionals.OptionalDecoder;
 import io.github.cweijan.mock.feign.config.InternalConfig;
+import io.github.cweijan.mock.openfeign.support.DefaultGzipDecoder;
+import io.github.cweijan.mock.openfeign.support.ResponseEntityDecoder;
+import io.github.cweijan.mock.openfeign.support.SpringDecoder;
+import io.github.cweijan.mock.openfeign.support.SpringEncoder;
 import io.github.cweijan.mock.util.JSON;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
-import org.springframework.cloud.openfeign.support.PageableSpringEncoder;
-import org.springframework.cloud.openfeign.support.SpringDecoder;
-import org.springframework.cloud.openfeign.support.SpringEncoder;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
@@ -21,7 +23,7 @@ import java.util.LinkedList;
  */
 public abstract class SpringCodecHolder {
 
-    private static  LinkedList<HttpMessageConverter<?>> httpMessageConverters;
+    private static LinkedList<HttpMessageConverter<?>> httpMessageConverters;
     private static Encoder encoder;
     private static Decoder decoder;
 
@@ -35,17 +37,14 @@ public abstract class SpringCodecHolder {
             }
         }
         ObjectFactory<HttpMessageConverters> httpMessageConvertersObjectFactory = () -> new HttpMessageConverters(false, httpMessageConverters);
-        decoder = new SpringDecoder(httpMessageConvertersObjectFactory);
+        decoder = new OptionalDecoder(new ResponseEntityDecoder(
+                new DefaultGzipDecoder(new SpringDecoder(httpMessageConvertersObjectFactory))
+        ));
         encoder = new SpringEncoder(httpMessageConvertersObjectFactory);
-        try {
-            Class.forName("org.springframework.data.domain.Pageable");
-            encoder = new PageableSpringEncoder(encoder);
-        } catch (ClassNotFoundException ignored) {
-        }
     }
 
     public static synchronized Encoder getEncoder() {
-        if(encoder==null){
+        if (encoder == null) {
             init();
         }
         return encoder;

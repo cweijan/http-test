@@ -16,11 +16,5 @@ jobs:
       with:
         gradle-version: 6.4
         arguments: build
-    - uses: eskatos/gradle-command-action@v1
-      with:
-        gradle-version: 6.4
-        arguments: sonarqube -Psonar.token.ultimate=${{ secrets.SONAR_TOKEN_ULTIMATE }}
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        
+
       

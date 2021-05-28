@@ -13,7 +13,7 @@
 <dependency>
     <groupId>io.github.cweijan</groupId>
     <artifactId>http-test</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <scope>test</scope>
 </dependency>
 ```

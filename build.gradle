@@ -10,7 +10,7 @@ sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
 group 'io.github.cweijan'
-version '1.1.0'
+version '1.1.1'
 
 repositories {
 //    mavenLocal()
@@ -59,7 +59,7 @@ publishing {
         mavenJava(MavenPublication) {
             groupId 'io.github.cweijan'
             artifactId 'http-test'
-            version '1.1.0'
+            version '1.1.1'
             from components.java
             artifact sourcesJar
             artifact javadocJar

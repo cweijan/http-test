@@ -183,6 +183,13 @@ public abstract class JSON {
     }
 
     /**
+     * 进行类型转换
+     */
+    public static <T> T convert(Object origin, Class<T> targetClass) {
+        return mapper.convertValue(origin, targetClass);
+    }
+
+    /**
      * 将json转成指定的类对象
      *
      * @param json json字符串

@@ -57,9 +57,9 @@ public abstract class FeignBuilder {
         String[] parameterNames = NAME_DISCOVERER.getParameterNames(method);
         for (int i = 0; i < parameters.length; i++) {
             Parameter parameter = parameters[i];
-            if(parameter.getType().isInterface())continue;
+            if (parameter.getType().isInterface()) continue;
             DynamicType.Builder.MethodDefinition.ParameterDefinition.Annotatable<?> tempBuilder = methodBuild.withParameter(parameter.getType(), Objects.requireNonNull(parameterNames)[i]).annotateParameter(parameter.getAnnotations());
-            if (isQuery && parameter.getAnnotation(PathVariable.class) == null) {
+            if (isQuery && parameter.getAnnotation(PathVariable.class) == null && parameter.getAnnotation(RequestParam.class) == null) {
                 tempBuilder = tempBuilder.annotateParameter(AnnotationDescription.Builder.ofType(isSimple(parameter.getType()) ? RequestParam.class : SpringQueryMap.class).build());
             }
             methodBuild = tempBuilder;
@@ -82,8 +82,8 @@ public abstract class FeignBuilder {
                 List.class.isAssignableFrom(type) ||
                 Map.class.isAssignableFrom(type) ||
                 Set.class.isAssignableFrom(type) ||
-                type== BigDecimal.class ||
-                type== BigInteger.class ||
+                type == BigDecimal.class ||
+                type == BigInteger.class ||
                 Temporal.class.isAssignableFrom(type) ||
                 Date.class.isAssignableFrom(type) ||
                 (type.getPackage() != null && type.getPackage().getName().startsWith("java.lang"));

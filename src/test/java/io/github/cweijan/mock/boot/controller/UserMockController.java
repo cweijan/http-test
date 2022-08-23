@@ -36,6 +36,11 @@ public class UserMockController {
         return userService.getUser(userId);
     }
 
+    @GetMapping("/getByReqParam")
+    public User getUserByRequestParam(@RequestParam Integer userId) {
+        return userService.getUser(userId);
+    }
+
     @PostMapping("/save")
     public void saveUser(@RequestBody User user) {
         userService.saveUser(user);

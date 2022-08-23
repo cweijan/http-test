@@ -162,6 +162,7 @@ public abstract class JSON {
      *
      * @param json      json字符串
      * @param valueType list泛型
+     * @param collectionClass 集合类型
      * @param <E>       集合类型
      * @param <T>       集合内的类型
      * @return 对象集合
@@ -184,6 +185,10 @@ public abstract class JSON {
 
     /**
      * 进行类型转换
+     * @param origin 原始数据
+     * @param targetClass 目标类型
+     * @param <T> 目标泛型
+     * @return 转换后的对象
      */
     public static <T> T convert(Object origin, Class<T> targetClass) {
         return mapper.convertValue(origin, targetClass);

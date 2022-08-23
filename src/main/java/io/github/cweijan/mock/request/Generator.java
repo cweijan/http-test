@@ -137,6 +137,7 @@ public abstract class Generator {
      * @param targetType 目标类型
      * @param <T>        要解析的类型
      * @param length     数组长度
+     * @return 目标类型数组
      */
     @SuppressWarnings("unchecked")
     public static <T> T[] array(Class<T> targetType, int length) {
